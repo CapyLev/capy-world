@@ -1,0 +1,93 @@
+version: '3.9'
+
+services:
+  core-database:
+    image: postgres:16
+    container_name: core-database
+    restart: always
+    ports:
+      - '6968:5432'
+    env_file:
+      - ./backend/core/.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - chatik-network
+
+  pgbouncer:
+    image: edoburu/pgbouncer:1.21.0-p2
+    container_name: pgbouncer
+    restart: always
+    ports:
+      - '6439:6432'
+    env_file:
+      - ./.env
+    depends_on:
+      - database
+    networks:
+      - capy-world-network
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "17027:27017"
+    env_file:
+      - ./.env
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - capy-world-network
+
+  redis:
+    build:
+      context: ./redis
+      dockerfile: ./Dockerfile
+    container_name: redis
+    ports:
+      - "8568:6379"
+    restart: always
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - capy-world-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+      target: dev
+    container_name: 4atik
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        python -m src.main
+      "
+    restart: always
+    ports:
+      - '6969:6969'
+    env_file:
+      - ./server/.env.server
+    volumes:
+      - ./server/src:/usr/src/app/src
+      - ./server/config:/usr/src/app/config
+    networks:
+      - capy-world-network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+      target: dev
+    container_name: nginx
+    restart: always
+    ports:
+      - '80:8080'
+    networks:
+      - capy-world-network
+
+volumes:
+  pg_data:
+
+networks:
+  capy-world-network:
