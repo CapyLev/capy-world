@@ -9,17 +9,17 @@ class BaseEnvSettings(BaseSettings):
 
 
 class ServerSettings(BaseEnvSettings):
-    SECRET_KEY: str = Field(default='123waewdqdpk)(UE)(@Y(HDihadiansdo9*UY()Q')
+    SECRET_KEY: str = Field(default="123waewdqdpk)(UE)(@Y(HDihadiansdo9*UY()Q")
     DEBUG: bool = Field(default=True)
-    ALLOWED_HOSTS: list[str] = Field(default=['*'])
+    ALLOWED_HOSTS: list[str] = Field(default=["*"])
 
 
 class DatabaseSettings(BaseEnvSettings):
-    ENGINE: str = Field(default='django.db.backends.postgresql')
-    DB_NAME: str = Field(default='core-capybara-name')
-    DB_USER: str = Field(default='core-capybara-master')
-    DB_PASSWORD: str = Field(default='core-capybara-king')
-    DB_HOST: str = Field(default='core-capybara-database')
+    ENGINE: str = Field(default="django.db.backends.postgresql")
+    DB_NAME: str = Field(default="core-capybara-name")
+    DB_USER: str = Field(default="core-capybara-master")
+    DB_PASSWORD: str = Field(default="core-capybara-king")
+    DB_HOST: str = Field(default="core-capybara-database")
     DB_PORT: int = Field(default=5432)
 
 
