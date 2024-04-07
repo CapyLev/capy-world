@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  core-database:
+  capy-core-database:
     image: postgres:16
-    container_name: core-database
+    container_name: capy-core-database
     restart: always
     ports:
       - '6968:5432'
@@ -12,69 +12,29 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
-      - chatik-network
-
-  pgbouncer:
-    image: edoburu/pgbouncer:1.21.0-p2
-    container_name: pgbouncer
-    restart: always
-    ports:
-      - '6439:6432'
-    env_file:
-      - ./.env
-    depends_on:
-      - database
-    networks:
       - capy-world-network
 
-  mongodb:
-    image: mongo:7.0
-    container_name: mongodb
-    ports:
-      - "17027:27017"
-    env_file:
-      - ./.env
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - capy-world-network
-
-  redis:
+  capy-core-server:
     build:
-      context: ./redis
-      dockerfile: ./Dockerfile
-    container_name: redis
-    ports:
-      - "8568:6379"
-    restart: always
-    volumes:
-      - ./redis_data:/data
-    networks:
-      - capy-world-network
-
-  server:
-    build:
-      context: ./server
+      context: ./backend/core
       dockerfile: ./Dockerfile
       target: dev
-    container_name: 4atik
-    command: >
-      sh -c "
-        alembic upgrade head &&
-        python -m src.main
-      "
+    container_name: capy_core_server
+    command: sh -c "./entrypoint.sh"
     restart: always
     ports:
       - '6969:6969'
     env_file:
-      - ./server/.env.server
+      - ./backend/core/.env
     volumes:
-      - ./server/src:/usr/src/app/src
-      - ./server/config:/usr/src/app/config
+      - ./backend/core/src:/app/backend/src
+      - ./backend/core/config:/app/backend/config
+      - static-data:/app/backend/core/config/static
+      - media-data:/app/backend/core/config/media
     networks:
       - capy-world-network
 
-  nginx:
+  capy-core-nginx:
     build:
       context: ./nginx
       dockerfile: ./Dockerfile
@@ -83,11 +43,35 @@ services:
     restart: always
     ports:
       - '80:8080'
+    volumes:
+      - static-data:/app/backend/core/config/static
+      - media-data:/app/backend/core/config/media
     networks:
       - capy-world-network
 
+  capy-core-rabbitmq:
+    image: rabbitmq:3.13.1-management
+    container_name: capy-core-rabbitmq
+    ports:
+      - "15627:15672"
+      - "5627:5672"
+    env_file:
+      - ./backend/ws-server/.env
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    networks:
+      - capy-world-network
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
 volumes:
   pg_data:
+  static-data:
+  media-data:
 
 networks:
   capy-world-network:
+    driver: bridge
