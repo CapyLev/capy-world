@@ -38,12 +38,14 @@ COPY --from=dev_req /app/backend/requirements.txt /app/backend/
 RUN pip install -r requirements.txt
 
 COPY ./ /app/backend/
+RUN chmod +x /app/backend/entrypoint.sh
 
 
 FROM base AS prod
 
-COPY --from=prod_req /usr/src/app/requirements.txt /app/backend/
+COPY --from=prod_req /app/backend/requirements.txt /app/backend/
 
 RUN pip install -r requirements.txt
 
 COPY ./ /app/backend/
+RUN chmod +x /app/backend/entrypoint.sh
