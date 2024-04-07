@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ws-server"
+version = "0.1.0"
+description = ""
+authors = ["nnnLik <rslmakhmudov@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic-settings = "2.2.1"
+aio-pika = "9.4.1"
+ujson = "^5.9.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
