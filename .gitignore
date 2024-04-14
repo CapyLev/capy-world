@@ -2,6 +2,6 @@
 __pycache__
 venv
 static
-rabbitmq
 pg_data
+rabbitmq_data
 *.log

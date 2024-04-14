@@ -29,8 +29,8 @@ services:
     volumes:
       - ./backend/core/src:/app/backend/core/src
       - ./backend/core/config:/app/backend/core/config
-      - static-data:/app/backend/core/config/static
-      - media-data:/app/backend/core/config/media
+      - static_data:/app/backend/core/config/static
+      - media_data:/app/backend/core/config/media
     networks:
       - capy-world-network
 
@@ -64,8 +64,8 @@ services:
     ports:
       - '80:8080'
     volumes:
-      - static-data:/app/backend/core/config/static
-      - media-data:/app/backend/core/config/media
+      - static_data:/app/backend/core/config/static
+      - media_data:/app/backend/core/config/media
     networks:
       - capy-world-network
 
@@ -78,7 +78,7 @@ services:
     env_file:
       - ./backend/ws-server/.env
     volumes:
-      - rabbitmq:/var/lib/rabbitmq
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - capy-world-network
     healthcheck:
@@ -87,11 +87,24 @@ services:
       timeout: 10s
       retries: 5
 
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "17027:27017"
+    env_file:
+      - ./backend/ws-server/.env
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - capy-world-network
+
 volumes:
   pg_data:
-  static-data:
-  media-data:
-  rabbitmq:
+  static_data:
+  media_data:
+  rabbitmq_data:
+  mongodb_data:
 
 networks:
   capy-world-network:
