@@ -4,14 +4,12 @@ from typing import Any, Dict
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 class ServerSettings(BaseSettings):
     NAME: str = Field(default="ws-server")
     DEBUG: bool = Field(default=True)
     HOST: str = Field(default="0.0.0.0")
     PORT: int = Field(default=6969)
-    # WORKERS: int = Field(default=(cpu_count() * 2 - 1 if not DEBUG else 1))
-    WORKERS: int = 10
+    WORKERS: int = Field(default=(cpu_count() * 2 - 1 if not DEBUG else 1))
     VERSION: str = Field(default="0.0.1")
     SECRET: str = Field(default="some ultra secret secret c:")
     TOKEN_LIFETIME: int = Field(default=86400)
@@ -46,11 +44,23 @@ class RabbitMQSettings(BaseSettings):
         return f'amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASS}@{self.RABBITMQ_HOST}:{self.RABBITMQ_PORT}/{self.RABBITMQ_VHOST}'
 
 
+class MongoDBSettings(BaseSettings):
+    NAME: str = Field("capy-ws-server-db", validation_alias="MONGO_DB_NAME")
+    COLLECTION: str = Field("capy-ws-server-collection", validation_alias="MONGO_COLLECTION")
+    HOST: str = Field("mongodb", validation_alias="MONGO_HOST")
+    PORT: int = Field(27017, validation_alias="MONGO_PORT")
+
+    @property
+    def MONGO_URL(self) -> str:
+        return f"mongodb://{self.HOST}:{self.PORT}"
+
+
 class Constants(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
     server: ServerSettings = ServerSettings()
     rabbitmq: RabbitMQSettings = RabbitMQSettings()
+    mongodb: MongoDBSettings = MongoDBSettings()
 
 
 constants = Constants()
