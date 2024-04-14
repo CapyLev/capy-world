@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import constants, LOGGING_CONF
 from src.modules.message_transmitter import MessageDTO, rabbitmq_transmitter
-from src.modules.storage import message_storage
+from src.modules.storage import message_storage, MessageDocument
 
 logging.config.dictConfig(LOGGING_CONF)
 
@@ -43,22 +43,17 @@ def get_server_app() -> FastAPI:
 app: FastAPI = get_server_app()
 
 
-@app.get('/')
-async def test(content: str | None = 'Test message') -> None:
-    await rabbitmq_transmitter.send(
-        MessageDTO(
-            content=content,
-            server_id=123,
-            user_id=1,
-            attachments = [],
-            created_at = datetime.now().isoformat(),
-        ),
-        routing_key='test',
-    )
-
+@app.get("/")
+async def test() -> None:
+    await message_storage.insert_one(MessageDocument(
+        server_id=1,
+        user_id=1,
+        content='Hello World!',
+    ))
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "main:app",
         host=constants.server.HOST,

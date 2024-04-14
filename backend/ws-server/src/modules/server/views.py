@@ -4,7 +4,7 @@ from fastapi import APIRouter, WebSocket
 server_router = APIRouter()
 
 
-@server_router('/ws/server')
+@server_router("/ws/server")
 async def ws_entrypoint_chat(websocket: WebSocket) -> None:
     await websocket.accept()
     connected_clients.append(websocket)

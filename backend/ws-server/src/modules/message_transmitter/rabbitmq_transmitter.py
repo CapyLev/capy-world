@@ -48,15 +48,14 @@ class RabbitMQTransmitter(MessageTransmitter):
         try:
             self.connection = await connect_robust(constants.rabbitmq.RABBITMQ_URL)
             self.channel = await self.connection.channel(publisher_confirms=False)
-            
+
             self.exchange = await self.channel.declare_exchange(
                 name=constants.rabbitmq.RABBITMQ_MSG_EXCHANGE_NAME,
-                type=ExchangeType.FANOUT
+                type=ExchangeType.FANOUT,
             )
 
             self.queue = await self.channel.declare_queue(
-                constants.rabbitmq.RABBITMQ_MSG_QUEUE_NAME,
-                durable=True
+                constants.rabbitmq.RABBITMQ_MSG_QUEUE_NAME, durable=True
             )
 
             await self.queue.bind(self.exchange)
@@ -70,18 +69,14 @@ class RabbitMQTransmitter(MessageTransmitter):
     async def disconnect(self) -> None:
         await self._clear()
 
-    async def send(
-        self,
-        message: MessageDTO,
-        routing_key: str
-    ) -> None:
+    async def send(self, message: MessageDTO, routing_key: str) -> None:
         if not self.channel:
             raise self.NotConnectedToRabbitMQError
 
         async with self.channel.transaction():
             message = Message(
                 body=ujson.dumps(message.model_dump()).encode(),
-                headers={"content_type": "application/json"}
+                headers={"content_type": "application/json"},
             )
 
             await self.exchange.publish(
