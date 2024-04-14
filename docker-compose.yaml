@@ -27,10 +27,30 @@ services:
     env_file:
       - ./backend/core/.env
     volumes:
-      - ./backend/core/src:/app/backend/src
-      - ./backend/core/config:/app/backend/config
+      - ./backend/core/src:/app/backend/core/src
+      - ./backend/core/config:/app/backend/core/config
       - static-data:/app/backend/core/config/static
       - media-data:/app/backend/core/config/media
+    networks:
+      - capy-world-network
+
+  capy-ws-server:
+    build:
+      context: ./backend/ws-server
+      dockerfile: ./Dockerfile
+      target: dev
+    container_name: capy_ws_server
+    command: sh -c "./entrypoint.sh"
+    restart: always
+    ports:
+      - '6967:6969'
+    env_file:
+      - ./backend/ws-server/.env
+    volumes:
+      - ./backend/ws-server/src:/app/backend/ws/src
+      - ./backend/ws-server/config:/app/backend/ws/config
+      - ./backend/ws-server/main.py:/app/backend/ws/main.py
+      - ./backend/ws-server/logs:/app/backend/ws/logs
     networks:
       - capy-world-network
 
@@ -54,11 +74,11 @@ services:
     container_name: capy-core-rabbitmq
     ports:
       - "15627:15672"
-      - "5627:5672"
+      - "5672:5672"
     env_file:
       - ./backend/ws-server/.env
     volumes:
-      - ./rabbitmq:/var/lib/rabbitmq
+      - rabbitmq:/var/lib/rabbitmq
     networks:
       - capy-world-network
     healthcheck:
@@ -71,6 +91,7 @@ volumes:
   pg_data:
   static-data:
   media-data:
+  rabbitmq:
 
 networks:
   capy-world-network:
