@@ -4,3 +4,4 @@ venv
 static
 rabbitmq
 pg_data
+*.log
