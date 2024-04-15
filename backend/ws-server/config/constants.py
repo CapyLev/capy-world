@@ -49,7 +49,7 @@ class RabbitMQSettings(BaseSettings):
 
 class MongoDBSettings(BaseSettings):
     MONGO_NAME: str = Field(default="capy-ws-server-db")
-    MONGO_COLLECTION: str = Field(default="capy-ws-server-collection")
+    MONGO_COLLECTION: str = Field(default="capy-ws-realm-collection")
     MONGO_HOST: str = Field(default="mongodb")
     MONGO_PORT: int = Field(default=27017)
 

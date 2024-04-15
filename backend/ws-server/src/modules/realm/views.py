@@ -4,7 +4,7 @@ from fastapi import APIRouter, WebSocket
 server_router = APIRouter()
 
 
-@server_router("/ws/server")
+@server_router("/ws/realm")
 async def ws_entrypoint_chat(websocket: WebSocket) -> None:
     await websocket.accept()
     connected_clients.append(websocket)
@@ -14,7 +14,7 @@ async def ws_entrypoint_chat(websocket: WebSocket) -> None:
             print(f"Received message from client: {data}")
             for client in connected_clients:
                 if client != websocket:
-                    await client.send_text(f"Message from server: {data}")
+                    await client.send_text(f"Message from realm: {data}")
     except Exception as e:
         print(f"WebSocket connection closed: {e}")
     finally:
