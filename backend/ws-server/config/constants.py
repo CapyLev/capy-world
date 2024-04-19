@@ -1,5 +1,4 @@
 from multiprocessing import cpu_count
-from typing import Any, Dict
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -12,24 +11,9 @@ class ServerSettings(BaseSettings):
     PORT: int = Field(default=6969)
     WORKERS: int = Field(default=(cpu_count() * 2 - 1 if not DEBUG else 1))
     VERSION: str = Field(default="0.0.1")
-    SECRET: str = Field(default="some ultra secret secret c:")
-    TOKEN_LIFETIME: int = Field(default=86400)
     LOG_LEVEL: str = Field(default="debug")
     ORIGINS: list[str] = Field(default=["*"])
-
-    @property
-    def fastapi_kwargs(self) -> Dict[str, Any]:
-        return {
-            "openapi_prefix": "",
-            "redoc_url": None,
-            "docs_url": None if self.DEBUG else "/docs",
-            "openapi_url": None if self.DEBUG else "/openapi.json",
-            "openapi_tags": (
-                None
-                if self.DEBUG
-                else [{"name": "monitor", "description": "uptime monitor endpoints"}]
-            ),
-        }
+    HTTP_VERSION: int = Field(default=1)
 
 
 class RabbitMQSettings(BaseSettings):
@@ -59,7 +43,7 @@ class MongoDBSettings(BaseSettings):
 
 
 class Constants(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra='ignore')
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     server: ServerSettings = ServerSettings()
     rabbitmq: RabbitMQSettings = RabbitMQSettings()

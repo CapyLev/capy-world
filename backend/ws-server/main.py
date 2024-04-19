@@ -1,64 +1,55 @@
 import logging.config
-from contextlib import asynccontextmanager
-from datetime import datetime
+from typing import Any
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from sanic import Sanic
+from sanic_cors import CORS
+from sanic.response import json as sanic_json
 
 from config import constants, LOGGING_CONF
-from src.modules.message_transmitter import MessageDTO, rabbitmq_transmitter
+from src.modules.message_transmitter import rabbitmq_transmitter
 from src.modules.storage import message_storage, MessageDocument
 
 logging.config.dictConfig(LOGGING_CONF)
 
+app = Sanic.get_app(
+    name=constants.server.NAME,
+    force_create=True,
+)
+CORS(app, resources={r"/*": {"origins": constants.server.ORIGINS}})
 
-@asynccontextmanager
-async def lifespan(_: FastAPI):
+
+@app.listener("before_server_start")
+async def init_all(*_: Any) -> None:
     await rabbitmq_transmitter.connect()
     await message_storage.initialize()
-    yield
+
+
+@app.listener("after_server_stop")
+async def close_all(*_: Any) -> None:
     await rabbitmq_transmitter.disconnect()
 
 
-def get_server_app() -> FastAPI:
-    app = FastAPI(
-        title=constants.server.NAME,
-        version=constants.server.VERSION,
-        debug=constants.server.DEBUG,
-        lifespan=lifespan,
-        **constants.server.fastapi_kwargs
+
+@app.route("/")
+async def test(request):
+    await message_storage.insert_one(
+        MessageDocument(
+            server_id=1,
+            user_id=1,
+            content="Hello World!",
+        )
     )
+    return sanic_json({"message": "Document inserted"})
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=constants.server.ORIGINS,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-    return app
-
-
-app: FastAPI = get_server_app()
-
-
-@app.get("/")
-async def test() -> None:
-    await message_storage.insert_one(MessageDocument(
-        server_id=1,
-        user_id=1,
-        content='Hello World!',
-    ))
 
 if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(
-        "main:app",
+    app.run(
         host=constants.server.HOST,
         port=constants.server.PORT,
         workers=constants.server.WORKERS,
-        log_level=constants.server.LOG_LEVEL,
-        use_colors=True,
+        debug=constants.server.DEBUG,
+        auto_reload=constants.server.DEBUG,
+        version=constants.server.HTTP_VERSION,
+        dev=constants.server.DEBUG,
+        fast=True,
     )

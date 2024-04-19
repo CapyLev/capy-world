@@ -11,10 +11,11 @@ pydantic-settings = "2.2.1"
 aio-pika = "9.4.1"
 ujson = "5.9.0"
 uvicorn = "0.29.0"
-fastapi = "0.110.1"
 websocket = "0.2.1"
 motor = "3.4.0"
 beanie = "1.25.0"
+sanic = "23.12.1"
+sanic-cors = "2.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

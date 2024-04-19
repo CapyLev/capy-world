@@ -21,7 +21,7 @@ class MessageDocument(Document):
     class Settings:
         indexes = [
             pymongo.IndexModel(keys=[("server_id", 1), ("created_at", -1)]),
-            pymongo.IndexModel(keys=[("server_id", 1), ("user_id", 1), ('id', 1)]),
+            pymongo.IndexModel(keys=[("server_id", 1), ("user_id", 1), ("id", 1)]),
         ]
 
 
