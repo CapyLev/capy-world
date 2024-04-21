@@ -1,0 +1,1 @@
+from .send_welcome_msg_view import SendWelcomeMsgView

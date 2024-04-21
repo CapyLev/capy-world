@@ -41,6 +41,3 @@ class MessageRepository:
             attachments=attachments,
             created_at=created_at.isoformat(),
         )
-
-
-message_repository: MessageRepository = MessageRepository()

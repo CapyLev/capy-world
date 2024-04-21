@@ -8,12 +8,13 @@ class ServerSettings(BaseSettings):
     NAME: str = Field(default="biboon")
     DEBUG: bool = Field(default=True)
     HOST: str = Field(default="0.0.0.0")
-    PORT: int = Field(default=6969)
+    PORT: int = Field(default=6900)
     WORKERS: int = Field(default=(cpu_count() * 2 - 1 if not DEBUG else 1))
     VERSION: str = Field(default="0.0.1")
     LOG_LEVEL: str = Field(default="debug")
     ORIGINS: list[str] = Field(default=["*"])
     HTTP_VERSION: int = Field(default=1)
+    ADMIN_USER_ID: int = Field(default=0)
 
 
 class RabbitMQSettings(BaseSettings):

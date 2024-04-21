@@ -24,11 +24,13 @@ class DatabaseSettings(BaseEnvSettings):
 
 
 class BiboonServerSettings(BaseEnvSettings):
-    SERVICE_URL: AnyUrl = Field(default="http://:8000")
+    SERVICE_URL: AnyUrl = Field(default="http://capy-biboon-server:6900")
+
 
 class ApplicationConsts:
     server: ServerSettings = ServerSettings()
     database: DatabaseSettings = DatabaseSettings()
+    biboon_server: BiboonServerSettings = BiboonServerSettings()
 
 
 application_consts: ApplicationConsts = ApplicationConsts()

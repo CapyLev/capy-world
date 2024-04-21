@@ -43,7 +43,7 @@ services:
     command: sh -c "./entrypoint.sh"
     restart: always
     ports:
-      - '6967:6969'
+      - '6967:6900'
     env_file:
       - ./backend/biboon/.env
     volumes:

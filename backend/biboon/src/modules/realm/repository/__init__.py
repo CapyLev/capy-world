@@ -1,1 +1,1 @@
-from .message_repository import message_repository
+from .message_repository import MessageRepository
