@@ -1,8 +1,6 @@
-from fastapi import WebSocket
-
-from src.modules.message_transmitter.interfaces import (
+from config.message_transmitter import (
     MessageTransmitter,
-    TransmitterMessageDTO,
+    MessageDTO,
 )
 
 
@@ -18,14 +16,24 @@ class ConnectionManager:
     ) -> None:
         self._message_transmitter = message_transmitter
 
-    async def connect(self, ws: WebSocket, server_id: int, user_id: int) -> None: ...
+    async def connect(
+        self,
+        ws: WebSocket,
+        server_id: int,
+        user_id: int,
+    ) -> None: ...
 
-    async def disconnect(self, ws: WebSocket, server_id: int, user_id: int) -> None: ...
+    async def disconnect(
+        self,
+        ws: WebSocket,
+        server_id: int,
+        user_id: int,
+    ) -> None: ...
 
     async def broadcast(
         self,
         ws: WebSocket,
         server_id: int,
         user_id: int,
-        message: TransmitterMessageDTO,
+        message: MessageDTO,
     ) -> None: ...
