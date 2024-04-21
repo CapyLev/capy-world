@@ -4,10 +4,7 @@ from src.realm.daos import ServerDAO, CreateServerDTO
 
 
 class CreateServerService:
-    def __init__(
-        self,
-        server_dao: ServerDAO
-    ) -> None:
+    def __init__(self, server_dao: ServerDAO) -> None:
         self._server_dao = server_dao
 
     def execute(

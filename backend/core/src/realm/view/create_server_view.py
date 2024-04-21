@@ -32,13 +32,11 @@ class CreateServerView(APIView):
         serializer.is_valid(raise_exception=True)
         admin_id = request.user.id
 
-        service = CreateServerService(
-            server_dao=ServerDAO()
-        )
+        service = CreateServerService(server_dao=ServerDAO())
         result = service.execute(
             admin_id=admin_id,
-            name=serializer.validated_data.get('name'),
-            description=serializer.validated_data.get('description'),
-            image=serializer.validated_data.get('image'),
+            name=serializer.validated_data.get("name"),
+            description=serializer.validated_data.get("description"),
+            image=serializer.validated_data.get("image"),
         )
         return Response(result, status=status.HTTP_201_CREATED)

@@ -14,7 +14,12 @@ class BiboonDAO:
         GET = "GET"
         POST = "POST"
 
-    def _send(self, url: str, method: Method, data: dict | None = None) -> dict:
+    def _send(
+        self,
+        url: str,
+        method: Method,
+        data: dict | None = None,
+    ) -> dict:
         try:
             response = requests.request(method=method.value, url=url, data=data)
             response.raise_for_status()
@@ -36,5 +41,9 @@ class BiboonDAO:
 
         return True
 
-    def send_welcome_message(self, server_id: int, user_id: int) -> None:
+    def send_welcome_message(
+        self,
+        server_id: int,
+        user_id: int,
+    ) -> None:
         pass

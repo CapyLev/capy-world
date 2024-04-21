@@ -39,8 +39,7 @@ class ServerDAO:
         user_id: int,
     ) -> bool:
         return ServerMember.objects.filter(
-            server_id=server_id,
-            user_id=user_id
+            server_id=server_id, user_id=user_id
         ).exists()
 
     def connect_user_to_server(
@@ -52,4 +51,3 @@ class ServerDAO:
             server_id=server_id,
             user_id=user_id,
         )
-
