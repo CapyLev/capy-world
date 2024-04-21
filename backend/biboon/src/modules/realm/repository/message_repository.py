@@ -22,7 +22,7 @@ class MessageRepository:
         messages = await MessageDocument.find(
             MessageDocument.server_id == server_id,
             sort=pymongo.DESCENDING,
-            ).to_list(length=chunk_size)
+        ).to_list(length=chunk_size)
 
         return messages
 

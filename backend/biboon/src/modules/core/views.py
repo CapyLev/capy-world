@@ -8,7 +8,7 @@ from src.modules.realm.repository import MessageRepository
 
 class PingView(HTTPMethodView):
     async def get(self, _: Request) -> JSONResponse:
-        return JSONResponse({'message': 'Hello World!'})
+        return JSONResponse({"message": "Hello World!"})
 
 
 class TestView(HTTPMethodView):

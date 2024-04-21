@@ -13,8 +13,5 @@ class SendWelcomeMsgView(HTTPMethodView):
         service = SendWelcomeMsgService(
             message_repository=MessageRepository(),
         )
-        service.execute(
-            server_id=data['server_id'],
-            username=data['username']
-        )
+        service.execute(server_id=data["server_id"], username=data["username"])
         return JSONResponse(status=200)

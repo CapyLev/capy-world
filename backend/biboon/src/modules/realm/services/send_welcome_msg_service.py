@@ -4,8 +4,9 @@ from src.modules.realm.repository import MessageRepository
 
 from config import constants
 
+
 class SendWelcomeMsgService:
-    WELCOME_MESSAGE_TMP = 'New user was joined to your server. Say hello to {username}.'
+    WELCOME_MESSAGE_TMP = "New user was joined to your server. Say hello to {username}."
 
     def __init__(
         self,

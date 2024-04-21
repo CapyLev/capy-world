@@ -32,6 +32,7 @@ def get_web_app() -> Sanic:
 
 app: Sanic = get_web_app()
 
+
 @app.listener("before_server_start")
 async def init_all(*_: Any) -> None:
     await rabbitmq_transmitter.connect()

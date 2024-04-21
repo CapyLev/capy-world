@@ -15,5 +15,4 @@ class ConnectToServerService:
         ws: Websocket,
         server_id: int,
         user_id: int,
-    ) -> None:
-        ...
+    ) -> None: ...

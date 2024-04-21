@@ -5,7 +5,11 @@ from config import (
     MessageTransmitter,
     MessageDTO,
 )
-from src.modules.realm.services import BroadcastService, DisconnectFromServerService, ConnectToServerService
+from src.modules.realm.services import (
+    BroadcastService,
+    DisconnectFromServerService,
+    ConnectToServerService,
+)
 
 
 class ConnectionManager:
@@ -28,8 +32,7 @@ class ConnectionManager:
         ws: Websocket,
         server_id: int,
         user_id: int,
-    ) -> None:
-       ...
+    ) -> None: ...
 
     async def disconnect(
         self,
