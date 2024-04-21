@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class ServerSettings(BaseSettings):
-    NAME: str = Field(default="ws-server")
+    NAME: str = Field(default="biboon")
     DEBUG: bool = Field(default=True)
     HOST: str = Field(default="0.0.0.0")
     PORT: int = Field(default=6969)
@@ -17,10 +17,10 @@ class ServerSettings(BaseSettings):
 
 
 class RabbitMQSettings(BaseSettings):
-    RABBITMQ_USER: str = Field(default="capy-ws-rabbitmq-user")
-    RABBITMQ_PASS: str = Field(default="capy-ws-rabbitmq-pass")
+    RABBITMQ_USER: str = Field(default="capy-biboon-rabbitmq-user")
+    RABBITMQ_PASS: str = Field(default="capy-biboon-rabbitmq-pass")
     RABBITMQ_HOST: str = Field(default="capy-core-rabbitmq")
-    RABBITMQ_VHOST: str = Field(default="capy-ws-rabbitmq")
+    RABBITMQ_VHOST: str = Field(default="capy-biboon-rabbitmq")
     RABBITMQ_PORT: int = Field(default=5672)
 
     RABBITMQ_MSG_QUEUE_NAME: str = Field(default="message_queue")
@@ -32,8 +32,8 @@ class RabbitMQSettings(BaseSettings):
 
 
 class MongoDBSettings(BaseSettings):
-    MONGO_NAME: str = Field(default="capy-ws-server-db")
-    MONGO_COLLECTION: str = Field(default="capy-ws-realm-collection")
+    MONGO_NAME: str = Field(default="capy-biboon-db")
+    MONGO_COLLECTION: str = Field(default="capy-biboon-realm-collection")
     MONGO_HOST: str = Field(default="mongodb")
     MONGO_PORT: int = Field(default=27017)
 

@@ -34,23 +34,23 @@ services:
     networks:
       - capy-world-network
 
-  capy-ws-server:
+  capy-biboon-server:
     build:
-      context: ./backend/ws-server
+      context: ./backend/biboon
       dockerfile: ./Dockerfile
       target: dev
-    container_name: capy_ws_server
+    container_name: capy_biboon_server
     command: sh -c "./entrypoint.sh"
     restart: always
     ports:
       - '6967:6969'
     env_file:
-      - ./backend/ws-server/.env
+      - ./backend/biboon/.env
     volumes:
-      - ./backend/ws-server/src:/app/backend/ws/src
-      - ./backend/ws-server/config:/app/backend/ws/config
-      - ./backend/ws-server/main.py:/app/backend/ws/main.py
-      - ./backend/ws-server/logs:/app/backend/ws/logs
+      - ./backend/biboon/src:/app/backend/biboon/src
+      - ./backend/biboon/config:/app/backend/biboon/config
+      - ./backend/biboon/main.py:/app/backend/biboon/main.py
+      - ./backend/biboon/logs:/app/backend/biboon/logs
     networks:
       - capy-world-network
 
@@ -76,7 +76,7 @@ services:
       - "15627:15672"
       - "5672:5672"
     env_file:
-      - ./backend/ws-server/.env
+      - ./backend/biboon/.env
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -93,7 +93,7 @@ services:
     ports:
       - "17027:27017"
     env_file:
-      - ./backend/ws-server/.env
+      - ./backend/biboon/.env
     volumes:
       - mongodb_data:/data/db
     networks:

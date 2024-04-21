@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ws-server"
+name = "biboon"
 version = "0.1.0"
 description = ""
 authors = ["nnnLik <rslmakhmudov@gmail.com>"]
@@ -10,8 +10,6 @@ python = "^3.10"
 pydantic-settings = "2.2.1"
 aio-pika = "9.4.1"
 ujson = "5.9.0"
-uvicorn = "0.29.0"
-websocket = "0.2.1"
 motor = "3.4.0"
 beanie = "1.25.0"
 sanic = "23.12.1"

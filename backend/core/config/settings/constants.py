@@ -1,4 +1,4 @@
-from pydantic import Field
+from pydantic import Field, AnyUrl
 from pydantic_settings import BaseSettings
 
 
@@ -22,6 +22,9 @@ class DatabaseSettings(BaseEnvSettings):
     DB_HOST: str = Field(default="core-capybara-database")
     DB_PORT: int = Field(default=5432)
 
+
+class BiboonServerSettings(BaseEnvSettings):
+    SERVICE_URL: AnyUrl = Field(default="http://:8000")
 
 class ApplicationConsts:
     server: ServerSettings = ServerSettings()

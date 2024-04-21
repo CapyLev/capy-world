@@ -15,13 +15,20 @@ from src.modules.realm.repository import message_repository
 
 logging.config.dictConfig(LOGGING_CONF)
 
-app = Sanic.get_app(
-    name=constants.server.NAME,
-    force_create=True,
-)
-Sanic.start_method = "fork"
 
-CORS(app, resources={r"/*": {"origins": constants.server.ORIGINS}})
+def get_web_app() -> Sanic:
+    application = Sanic(
+        name=constants.server.NAME,
+        log_config=LOGGING_CONF,
+    )
+    Sanic.start_method = "fork"
+
+    CORS(application, resources={r"/*": {"origins": constants.server.ORIGINS}})
+
+    return application
+
+
+app: Sanic = get_web_app()
 
 
 @app.listener("before_server_start")
@@ -56,5 +63,5 @@ if __name__ == "__main__":
         auto_reload=constants.server.DEBUG,
         version=constants.server.HTTP_VERSION,
         dev=constants.server.DEBUG,
-        fast=True,
+        access_log=False,
     )
