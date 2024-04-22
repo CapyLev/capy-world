@@ -69,6 +69,8 @@ class RabbitMQTransmitter(MessageTransmitter):
     async def disconnect(self) -> None:
         await self._clear()
 
+    # TODO: добавить какой-то мб енам для того чтобы определять куда отправлять сообщение в принципе
+    # тк роутинг по ключу не самый удобный вариант
     async def send(self, message: MessageDTO, routing_key: str) -> None:
         if not self.channel:
             raise self.NotConnectedToRabbitMQError
