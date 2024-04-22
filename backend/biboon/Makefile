@@ -1,3 +1,2 @@
-restart:
+rebuild:
 	docker compose up --build capy-biboon-server --remove-orphans -d
-

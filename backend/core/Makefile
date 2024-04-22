@@ -1,4 +1,4 @@
-restart:
+rebuild:
 	docker compose up --build capy-core-server --remove-orphans -d
 
 makemigrations:
