@@ -19,6 +19,7 @@ class SendWelcomeMsgService:
         server_id: int,
         username: str,
     ) -> None:
+        # TODO: 1. get msg. 2. save to storage. 3. send to all connected pipes
         self._message_repository.create_message(
             server_id=server_id,
             user_id=constants.server.ADMIN_USER_ID,
