@@ -1,4 +1,4 @@
-from config.message_transmitter import MessageTransmitter, MessageDTO
+from config.message_transmitter import MessageTransmitter, MessageDTO, RoutingKey
 from src.modules.realm.repository import MessageRepository
 
 
@@ -11,7 +11,9 @@ class HandleIncomingWSMessagesService:
         self._message_repository = message_repository
         self._message_transmitter = message_transmitter
 
-    def execute(self, message: MessageDTO) -> None:
-        pass
-        # 1. must save incoming messages to storage
-        # 2. send msg to transmitter
+    async def execute(self, message_dto: MessageDTO) -> None:
+        await self._message_repository.insert_one(message_dto=message_dto)
+        await self._message_transmitter.send(
+            message=message_dto,
+            routing_key=RoutingKey.EVERYONE,
+        )

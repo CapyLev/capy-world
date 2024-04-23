@@ -9,10 +9,11 @@ from aio_pika.abc import (
     AbstractRobustChannel,
     AbstractExchange,
     AbstractQueue,
-    AbstractIncomingMessage,
 )
 
 from config.constants import constants
+from src.modules.realm.connection_manager import ConnectionManager
+
 from .interfaces import MessageTransmitter, MessageDTO
 
 
@@ -60,7 +61,7 @@ class _RabbitMQTransmitter(MessageTransmitter):
             )
 
             await self.queue.bind(self.exchange)
-            await self.queue.consume(self._consume, no_ack=True)
+            await self.queue.consume(ConnectionManager.broadcast, no_ack=True)
 
             logging.info("Rabbitmq successfully connected.")
         except Exception as e:
@@ -88,11 +89,6 @@ class _RabbitMQTransmitter(MessageTransmitter):
                 message,
                 routing_key=routing_key,
             )
-
-    async def _consume(self, message: AbstractIncomingMessage) -> ...:  # TODO
-        logging.info(message.body)
-
-        return ...
 
 
 RabbitMQTransmitter: _RabbitMQTransmitter = _RabbitMQTransmitter()
