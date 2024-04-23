@@ -28,7 +28,7 @@ class RabbitMQSettings(BaseSettings):
     RABBITMQ_MSG_EXCHANGE_NAME: str = Field(default="message_exchange")
 
     @property
-    def RABBITMQ_URL(self):
+    def RABBITMQ_URL(self) -> str:
         return f"amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASS}@{self.RABBITMQ_HOST}:{self.RABBITMQ_PORT}/{self.RABBITMQ_VHOST}"
 
 
@@ -43,12 +43,25 @@ class MongoDBSettings(BaseSettings):
         return f"mongodb://{self.MONGO_HOST}:{self.MONGO_PORT}"
 
 
+class RedisSettings(BaseSettings):
+    REDIS_HOST: str = Field(default="localhost")
+    REDIS_PORT: int = Field(default=6379)
+    REDIS_DB: int = Field(default=0)
+    REDIS_SINGLE_CONNECTION_CLIENT: bool = Field(default=False)
+    AUTO_CLOSE_CONNECTION_POOL_CLIENT: bool = Field(default=False)
+
+    @property
+    def REDIS_URL(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
+
+
 class Constants(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     server: ServerSettings = ServerSettings()
     rabbitmq: RabbitMQSettings = RabbitMQSettings()
     mongodb: MongoDBSettings = MongoDBSettings()
+    redis: RedisSettings = RedisSettings()
 
 
 constants = Constants()

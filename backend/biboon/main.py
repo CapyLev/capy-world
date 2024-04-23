@@ -4,14 +4,10 @@ from typing import Any
 from sanic import Sanic
 from sanic_cors import CORS
 
-from sanic.request import Request
-from sanic.response import JSONResponse
+from config import constants, LOGGING_CONF, Storage
+from config.message_transmitter import RabbitMQTransmitter
 
-from config import constants, LOGGING_CONF
-from config import rabbitmq_transmitter, Storage
-
-from src.modules import models, MessageDocument
-from src.modules.realm.repository import message_repository
+from src.modules import models
 from src.modules.routers import api
 
 logging.config.dictConfig(LOGGING_CONF)
@@ -35,13 +31,13 @@ app: Sanic = get_web_app()
 
 @app.listener("before_server_start")
 async def init_all(*_: Any) -> None:
-    await rabbitmq_transmitter.connect()
+    await RabbitMQTransmitter.connect()
     await Storage.initialize(models)
 
 
 @app.listener("after_server_stop")
 async def close_all(*_: Any) -> None:
-    await rabbitmq_transmitter.disconnect()
+    await RabbitMQTransmitter.disconnect()
 
 
 if __name__ == "__main__":
