@@ -1,1 +1,2 @@
 from .send_welcome_msg_view import send_welcome_msg_view
+from .message_handler_view import message_handler_view

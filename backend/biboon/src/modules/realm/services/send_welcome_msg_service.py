@@ -1,9 +1,8 @@
 from datetime import datetime
 
 from config import constants
-from config.message_transmitter import MessageTransmitter, RoutingKey
+from config.message_transmitter import MessageTransmitter, RoutingKey, MessageDTO
 from src.modules.realm.repository import MessageRepository
-from src.utils.transmitter_utils import convert_msg_document_to_transmitter_dto
 
 
 class SendWelcomeMsgService:
@@ -22,16 +21,18 @@ class SendWelcomeMsgService:
         server_id: int,
         user_id: int,
     ) -> None:
-        welcome_message = await self._message_repository.create_message(
+        message = MessageDTO(
             server_id=server_id,
             user_id=constants.server.ADMIN_USER_ID,
             attachments=[],
-            created_at=datetime.now(),
+            created_at=datetime.now().isoformat(),
             content=self.WELCOME_MESSAGE_TMP.format(user_id=user_id),
         )
+        await self._message_repository.insert_one(
+            message_dto=message,
+        )
 
-        await self._message_repository.insert_one(welcome_message)
         await self._message_transmitter.send(
-            message=await convert_msg_document_to_transmitter_dto(welcome_message),
+            message=message,
             routing_key=RoutingKey.EVERYONE,
         )

@@ -9,6 +9,7 @@ from aio_pika.abc import (
     AbstractRobustChannel,
     AbstractExchange,
     AbstractQueue,
+    AbstractIncomingMessage,
 )
 
 from config.constants import constants
@@ -16,7 +17,7 @@ from .interfaces import MessageTransmitter, MessageDTO
 
 
 @dataclass
-class RabbitMQTransmitter(MessageTransmitter):
+class _RabbitMQTransmitter(MessageTransmitter):
     class RabbitMQClientError(Exception):
         pass
 
@@ -59,7 +60,7 @@ class RabbitMQTransmitter(MessageTransmitter):
             )
 
             await self.queue.bind(self.exchange)
-            await self.queue.consume(self._notify, no_ack=True)
+            await self.queue.consume(self._consume, no_ack=True)
 
             logging.info("Rabbitmq successfully connected.")
         except Exception as e:
@@ -69,8 +70,6 @@ class RabbitMQTransmitter(MessageTransmitter):
     async def disconnect(self) -> None:
         await self._clear()
 
-    # TODO: добавить какой-то мб енам для того чтобы определять куда отправлять сообщение в принципе
-    # тк роутинг по ключу не самый удобный вариант
     async def send(
         self,
         message: MessageDTO,
@@ -90,8 +89,10 @@ class RabbitMQTransmitter(MessageTransmitter):
                 routing_key=routing_key,
             )
 
-    async def _notify(self, m):
-        logging.info(m.body)
+    async def _consume(self, message: AbstractIncomingMessage) -> ...:  # TODO
+        logging.info(message.body)
+
+        return ...
 
 
-rabbitmq_transmitter: RabbitMQTransmitter = RabbitMQTransmitter()
+RabbitMQTransmitter: _RabbitMQTransmitter = _RabbitMQTransmitter()

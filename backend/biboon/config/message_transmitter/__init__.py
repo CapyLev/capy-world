@@ -1,2 +1,2 @@
 from .interfaces import MessageDTO, MessageTransmitter, RoutingKey
-from .rabbitmq_transmitter import rabbitmq_transmitter
+from .rabbitmq_transmitter import RabbitMQTransmitter

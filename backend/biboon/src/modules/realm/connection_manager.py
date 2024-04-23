@@ -1,10 +1,11 @@
 from sanic import Websocket
 
-from config import (
-    rabbitmq_transmitter,
+from config.message_transmitter import (
+    RabbitMQTransmitter,
     MessageTransmitter,
     MessageDTO,
 )
+from src.modules.realm.repository import MessageRepository
 from src.modules.realm.services import (
     BroadcastService,
     DisconnectFromServerService,
@@ -12,7 +13,7 @@ from src.modules.realm.services import (
 )
 
 
-class ConnectionManager:
+class _ConnectionManager:
     connections: dict[int, dict[int, Websocket]] = {}
 
     def __init__(
@@ -32,7 +33,12 @@ class ConnectionManager:
         ws: Websocket,
         server_id: int,
         user_id: int,
-    ) -> None: ...
+    ) -> None:
+        if server_id not in self.connections:
+            self.connections[server_id] = {}
+        self.connections[server_id][user_id] = ws
+
+        await self._connect_to_server_service.execute(ws, server_id, user_id)
 
     async def disconnect(
         self,
@@ -50,9 +56,11 @@ class ConnectionManager:
     ) -> None: ...
 
 
-connection_manager: ConnectionManager = ConnectionManager(
-    message_transmitter=rabbitmq_transmitter,
-    connect_to_server_service=ConnectToServerService(),
+ConnectionManager: _ConnectionManager = _ConnectionManager(
+    message_transmitter=RabbitMQTransmitter,
+    connect_to_server_service=ConnectToServerService(
+        message_repository=MessageRepository(),
+    ),
     disconnect_from_server_service=DisconnectFromServerService(),
     broadcast_service=BroadcastService(),
 )

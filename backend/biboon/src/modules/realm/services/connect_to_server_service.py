@@ -15,4 +15,7 @@ class ConnectToServerService:
         ws: Websocket,
         server_id: int,
         user_id: int,
-    ) -> None: ...
+    ) -> None:
+        # in this service we can handle online status of user by keeping it in redis
+        # add fetching messages from storage and return it
+        pass
