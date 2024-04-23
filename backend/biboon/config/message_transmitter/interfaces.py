@@ -1,3 +1,4 @@
+import enum
 from abc import ABC, abstractmethod
 from datetime import datetime
 
@@ -10,6 +11,10 @@ class MessageDTO(BaseModel):
     content: str
     attachments: list[str | None] = []
     created_at: str = datetime.now().isoformat()
+
+
+class RoutingKey(enum.StrEnum):
+    EVERYONE = ""
 
 
 class MessageTransmitter(ABC):
@@ -29,6 +34,6 @@ class MessageTransmitter(ABC):
     async def send(
         self,
         message: MessageDTO,
-        routing_key: str,
+        routing_key: RoutingKey,
     ) -> None:
         pass

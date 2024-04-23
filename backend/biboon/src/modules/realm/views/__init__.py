@@ -1,1 +1,1 @@
-from .send_welcome_msg_view import SendWelcomeMsgView
+from .send_welcome_msg_view import send_welcome_msg_view

@@ -1,7 +1,8 @@
 from sanic import Blueprint
-from .views import PingView, TestView
+from .views import ping_view, test_view
 
 route = Blueprint("core", url_prefix="/core")
 
-route.add_route(PingView.as_view(), "/ping")
-route.add_route(TestView.as_view(), "/test")
+
+route.add_route(ping_view, "/ping")
+route.add_route(test_view, "/test")

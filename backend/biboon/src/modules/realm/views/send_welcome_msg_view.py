@@ -1,17 +1,17 @@
 from sanic import Request
 from sanic.response import JSONResponse
-from sanic.views import HTTPMethodView
 
+from config import rabbitmq_transmitter
 from src.modules.realm.repository import MessageRepository
 from src.modules.realm.services import SendWelcomeMsgService
 
 
-class SendWelcomeMsgView(HTTPMethodView):
-    async def post(self, request: Request) -> JSONResponse:
-        data = request.json
+async def send_welcome_msg_view(request: Request) -> JSONResponse:
+    data = request.json
 
-        service = SendWelcomeMsgService(
-            message_repository=MessageRepository(),
-        )
-        service.execute(server_id=data["server_id"], username=data["username"])
-        return JSONResponse(status=200)
+    service = SendWelcomeMsgService(
+        message_repository=MessageRepository(),
+        message_transmitter=rabbitmq_transmitter,
+    )
+    await service.execute(server_id=data["server_id"], user_id=data["user_id"])
+    return JSONResponse(status=200)
