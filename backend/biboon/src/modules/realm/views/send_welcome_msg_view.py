@@ -11,7 +11,7 @@ async def send_welcome_msg_view(request: Request) -> JSONResponse:
 
     service = SendWelcomeMsgService(
         message_repository=MessageRepository(),
-        message_transmitter=RabbitMQTransmitter,
+        message_transmitter=RabbitMQTransmitter(),
     )
     await service.execute(server_id=data["server_id"], user_id=data["user_id"])
     return JSONResponse(status=200)

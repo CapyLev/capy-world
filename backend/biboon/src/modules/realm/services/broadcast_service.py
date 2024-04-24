@@ -7,6 +7,3 @@ class BroadcastService(metaclass=SingletonMeta):
 
     def execute(self) -> None:
         pass
-
-
-broadcast_service = BroadcastService()

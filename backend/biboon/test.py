@@ -1,5 +1,6 @@
 import json
 import asyncio
+import time
 from datetime import datetime
 import websockets
 
@@ -7,7 +8,8 @@ import websockets
 async def send_message():
     uri = "ws://localhost:6967/api/realm/ws/message_handler/1/1"
     async with websockets.connect(uri) as ws:
-        for i in range(22):
+        for i in range(100):
+            time.sleep(1)
             print(f'Sending message {i}')
             message = json.dumps({
                 "server_id": 1,
