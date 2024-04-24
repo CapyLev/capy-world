@@ -1,5 +1,4 @@
 import logging
-from dataclasses import dataclass
 
 import ujson
 
@@ -12,13 +11,13 @@ from aio_pika.abc import (
 )
 
 from config.constants import constants
+from src.utils.singlton_meta import SingletonMeta
 from src.modules.realm.connection_manager import ConnectionManager
 
 from .interfaces import MessageTransmitter, MessageDTO
 
 
-@dataclass
-class _RabbitMQTransmitter(MessageTransmitter):
+class RabbitMQTransmitter(MessageTransmitter, metaclass=SingletonMeta):
     class RabbitMQClientError(Exception):
         pass
 
@@ -89,6 +88,3 @@ class _RabbitMQTransmitter(MessageTransmitter):
                 message,
                 routing_key=routing_key,
             )
-
-
-RabbitMQTransmitter: _RabbitMQTransmitter = _RabbitMQTransmitter()

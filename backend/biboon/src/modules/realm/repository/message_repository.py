@@ -3,10 +3,11 @@ from typing import TypedDict, Unpack
 import pymongo
 
 from config.message_transmitter import MessageDTO
+from src.utils.singlton_meta import SingletonMeta
 from ..models import MessageDocument
 
 
-class MessageRepository:
+class MessageRepository(metaclass=SingletonMeta):
     DEFAULT_MESSAGE_CHUNK_SIZE = 200
 
     class MessageRepositoryError(Exception):

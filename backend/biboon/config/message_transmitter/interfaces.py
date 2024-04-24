@@ -1,5 +1,4 @@
 import enum
-from abc import ABC, abstractmethod
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -17,23 +16,19 @@ class RoutingKey(enum.StrEnum):
     EVERYONE = "message_queue"
 
 
-class MessageTransmitter(ABC):
-    @abstractmethod
+class MessageTransmitter:
     def status(self) -> bool:
-        pass
+       raise NotImplementedError
 
-    @abstractmethod
     async def connect(self) -> None:
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     async def disconnect(self) -> None:
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     async def send(
         self,
         message: MessageDTO,
         routing_key: RoutingKey,
     ) -> None:
-        pass
+        raise NotImplementedError

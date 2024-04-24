@@ -3,15 +3,15 @@ from aio_pika.abc import AbstractIncomingMessage
 from sanic import Websocket
 from sanic.log import logger
 
-from src.modules.realm.repository import MessageRepository
 from src.modules.realm.services import (
     BroadcastService,
     DisconnectFromServerService,
     ConnectToServerService,
 )
+from src.utils.singlton_meta import SingletonMeta
 
 
-class _ConnectionManager:
+class ConnectionManager(metaclass=SingletonMeta):
     _connections: dict[int, dict[int, Websocket]] = {}
 
     def __init__(
@@ -67,13 +67,3 @@ class _ConnectionManager:
                 await ws_connection.send(message.body)
             except Exception as e:
                 logger.error(f"Error sending message through WebSocket: {str(e)}")
-
-
-
-ConnectionManager: _ConnectionManager = _ConnectionManager(
-    connect_to_server_service=ConnectToServerService(
-        message_repository=MessageRepository(),
-    ),
-    disconnect_from_server_service=DisconnectFromServerService(),
-    broadcast_service=BroadcastService(),
-)

@@ -62,7 +62,7 @@ services:
     container_name: nginx
     restart: always
     ports:
-      - '80:8080'
+      - '69:8080'
     volumes:
       - static_data:/app/backend/core/config/static
       - media_data:/app/backend/core/config/media
@@ -99,12 +99,27 @@ services:
     networks:
       - capy-world-network
 
+  redis:
+    build:
+      context: ./redis
+      dockerfile: ./Dockerfile
+    container_name: redis
+    ports:
+      - "8568:6379"
+    restart: always
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - capy-world-network
+
+
 volumes:
   pg_data:
   static_data:
   media_data:
   rabbitmq_data:
   mongodb_data:
+  redis_data:
 
 networks:
   capy-world-network:

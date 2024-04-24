@@ -1,9 +1,10 @@
 from sanic import Websocket
 
 from src.modules.realm.repository.message_repository import MessageRepository
+from src.utils.singlton_meta import SingletonMeta
 
 
-class ConnectToServerService:
+class ConnectToServerService(metaclass=SingletonMeta):
     def __init__(
         self,
         message_repository: MessageRepository,

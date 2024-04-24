@@ -7,17 +7,16 @@ import websockets
 async def send_message():
     uri = "ws://localhost:6967/api/realm/ws/message_handler/1/1"
     async with websockets.connect(uri) as ws:
-        # for i in range(22):
-        # message = json.dumps({
-        #         "server_id": 1,
-        #         "user_id": 1,
-        #         "content": f"message 1",
-        #         "attachments": [],
-        #         "created_at": datetime.now().isoformat()
-        # })
-        # await ws.send(message)
-        await ws.send('asdsa')
-        pass
+        for i in range(22):
+            print(f'Sending message {i}')
+            message = json.dumps({
+                "server_id": 1,
+                "user_id": 1,
+                "content": f"message {i}",
+                "attachments": [],
+                "created_at": datetime.now().isoformat()
+            })
+            await ws.send(message)
 
 
 async def main():

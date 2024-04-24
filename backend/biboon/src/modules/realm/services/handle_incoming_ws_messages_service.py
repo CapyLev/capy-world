@@ -1,8 +1,9 @@
 from config.message_transmitter import MessageTransmitter, MessageDTO, RoutingKey
 from src.modules.realm.repository import MessageRepository
+from src.utils.singlton_meta import SingletonMeta
 
 
-class HandleIncomingWSMessagesService:
+class HandleIncomingWSMessagesService(metaclass=SingletonMeta):
     def __init__(
         self,
         message_repository: MessageRepository,

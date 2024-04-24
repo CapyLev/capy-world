@@ -4,10 +4,11 @@ from typing import AsyncGenerator
 from redis.asyncio import client, from_url
 from sanic.log import logger
 
+from src.utils.singlton_meta import SingletonMeta
 from .constants import constants
 
 
-class RedisClient:
+class RedisClient(metaclass=SingletonMeta):
     _redis: client.Redis | None = None
 
     async def _connect(self) -> None:

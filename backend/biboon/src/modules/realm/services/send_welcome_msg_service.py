@@ -3,9 +3,10 @@ from datetime import datetime
 from config import constants
 from config.message_transmitter import MessageTransmitter, RoutingKey, MessageDTO
 from src.modules.realm.repository import MessageRepository
+from src.utils.singlton_meta import SingletonMeta
 
 
-class SendWelcomeMsgService:
+class SendWelcomeMsgService(metaclass=SingletonMeta):
     WELCOME_MESSAGE_TMP = "New user was joined to your server. Say hello to {user_id}."
 
     def __init__(
