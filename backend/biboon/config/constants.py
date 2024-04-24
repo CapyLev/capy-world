@@ -44,7 +44,7 @@ class MongoDBSettings(BaseSettings):
 
 
 class RedisSettings(BaseSettings):
-    REDIS_HOST: str = Field(default="localhost")
+    REDIS_HOST: str = Field(default="redis")
     REDIS_PORT: int = Field(default=6379)
     REDIS_DB: int = Field(default=0)
     REDIS_SINGLE_CONNECTION_CLIENT: bool = Field(default=False)

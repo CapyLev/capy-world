@@ -50,7 +50,7 @@ class MessageRepository:
             server_id=message_dto.server_id or kwargs["server_id"],
             user_id=message_dto.user_id or kwargs["user_id"],
             content=message_dto.content or kwargs["content"],
-            attachments=message_dto.attachments or kwargs["attachments"],
+            attachments=message_dto.attachments or kwargs.get("attachments") or [],
             created_at=message_dto.created_at or kwargs["created_at"],
         )
 
