@@ -15,7 +15,13 @@ class ServerSettings(BaseSettings):
     ORIGINS: list[str] = Field(default=["*"])
     HTTP_VERSION: int = Field(default=1)
     ADMIN_USER_ID: int = Field(default=0)
-
+    WEBSOCKET_MAX_SIZE: int = Field(default=2**20)
+    WEBSOCKET_MAX_QUEUE: int = Field(default=100)
+    WEBSOCKET_READ_LIMIT: int = Field(default=(2 ** 20) * 100)
+    WEBSOCKET_WRITE_LIMIT: int = Field(default=(2 ** 20) * 100)
+    WEBSOCKET_PING_INTERVAL: int = Field(default=10)
+    WEBSOCKET_PING_TIMEOUT: int = Field(default=30)
+    WEBSOCKET_CLOSE_TIME_OUT: int = Field(default=30)
 
 class RabbitMQSettings(BaseSettings):
     RABBITMQ_USER: str = Field(default="capy-biboon-rabbitmq-user")

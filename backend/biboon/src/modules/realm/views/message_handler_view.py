@@ -1,3 +1,6 @@
+import logging
+from datetime import datetime
+
 import ujson
 from sanic import Request, Websocket
 
@@ -10,6 +13,8 @@ from src.modules.realm.services import (
     DisconnectFromServerService,
     BroadcastService,
 )
+
+logger = logging.getLogger(__name__)
 
 
 async def message_handler_view(
@@ -38,4 +43,12 @@ async def message_handler_view(
     )
 
     async for msg in ws:
-        await service.execute(MessageDTO(**ujson.loads(msg)))
+        try:
+            await service.execute(MessageDTO(**ujson.loads(msg)))
+        except ujson.JSONDecodeError:
+            logger.exception(f"Error decoding ws message: {msg}", extra={
+                'server_id': server_id,
+                'user_id': user_id,
+                'message': msg,
+                'exception_datetime': datetime.now().isoformat(),
+            })
