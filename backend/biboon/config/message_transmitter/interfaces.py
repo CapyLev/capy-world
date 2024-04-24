@@ -14,7 +14,7 @@ class MessageDTO(BaseModel):
 
 
 class RoutingKey(enum.StrEnum):
-    EVERYONE = ""
+    EVERYONE = "message_queue"
 
 
 class MessageTransmitter(ABC):

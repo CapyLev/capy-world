@@ -1,6 +1,7 @@
 import ujson
 from aio_pika.abc import AbstractIncomingMessage
 from sanic import Websocket
+from sanic.log import logger
 
 from src.modules.realm.repository import MessageRepository
 from src.modules.realm.services import (
@@ -46,11 +47,27 @@ class _ConnectionManager:
         self,
         message: AbstractIncomingMessage,
     ) -> None:
-        decoded_message = ujson.loads(message.body.decode(encoding='utf-8', errors='strict'))
-        pool_of_server_connections = self._connections[decoded_message['server_id']]
+        logger.debug(f"TEST Broadcasting message: {message.body}")
+        logger.debug(f"TEST Broadcasting message: {message.content_type}")
+
+        try:
+            server_id = ujson.loads(message.body.decode(encoding='utf-8', errors='strict'))['server_id']
+        except (ValueError, KeyError) as exc:
+            logger.error(f"Error decoding incoming ws message or retrieving server_id: Error {str(exc)}")
+            return
+
+        try:
+            pool_of_server_connections = self._connections[server_id]
+        except KeyError:
+            logger.error(f"No connections available for server_id: {server_id}")
+            return
 
         for _, ws_connection in pool_of_server_connections.items():
-            await ws_connection.send(decoded_message)
+            try:
+                await ws_connection.send(message.body)
+            except Exception as e:
+                logger.error(f"Error sending message through WebSocket: {str(e)}")
+
 
 
 ConnectionManager: _ConnectionManager = _ConnectionManager(

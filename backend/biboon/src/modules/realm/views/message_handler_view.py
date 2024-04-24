@@ -1,5 +1,6 @@
 import ujson
 from sanic import Request, Websocket
+from sanic.log import logger
 
 from config.message_transmitter import RabbitMQTransmitter, MessageDTO
 from src.modules.realm.repository import MessageRepository
@@ -13,6 +14,7 @@ async def message_handler_view(
     server_id: int,
     user_id: int,
 ):
+    print("Started message_handler_view")
     await ConnectionManager.connect(
         ws=ws,
         user_id=user_id,
@@ -25,4 +27,4 @@ async def message_handler_view(
     )
 
     async for msg in ws:
-        await service.execute(MessageDTO(**ujson.loads(msg)))
+        await service.execute(MessageDTO(**ujson.loads(msg.decode('utf-8'))))
