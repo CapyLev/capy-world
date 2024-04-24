@@ -1,30 +1,37 @@
+
 import json
 import asyncio
-import time
 from datetime import datetime
 import websockets
 
 
-async def send_message():
-    uri = "ws://localhost:6967/api/realm/ws/message_handler/1/1"
+async def send_message(uri):
     async with websockets.connect(uri) as ws:
-        for i in range(100):
-            time.sleep(1)
-            print(f'Sending message {i}')
+        while True:
             message = json.dumps({
                 "server_id": 1,
                 "user_id": 1,
-                "content": f"message {i}",
+                "content": "Test message",
                 "attachments": [],
                 "created_at": datetime.now().isoformat()
             })
+            print(f'Sending message: {message}')
             await ws.send(message)
+            await asyncio.sleep(1)
+
+
+async def receive_messages(uri):
+    async with websockets.connect(uri) as ws:
+        while True:
+            message = await ws.recv()
+            print(f'Received message: {message}')
 
 
 async def main():
-    await send_message()
+    uri = "ws://localhost:6967/api/realm/ws/message_handler/1/1"
+    tasks = [send_message(uri), receive_messages(uri)]
+    await asyncio.gather(*tasks)
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    asyncio.run(main())

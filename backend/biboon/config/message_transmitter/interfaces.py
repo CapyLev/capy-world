@@ -1,14 +1,14 @@
 import enum
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class MessageDTO(BaseModel):
     server_id: int
     user_id: int
     content: str
-    attachments: list[str | None] = []
+    attachments: list[str | None] = Field(default_factory=list)
     created_at: str = datetime.now().isoformat()
 
 

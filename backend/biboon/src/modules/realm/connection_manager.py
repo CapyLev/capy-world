@@ -3,6 +3,7 @@ from aio_pika.abc import AbstractIncomingMessage
 from sanic import Websocket
 from sanic.log import logger
 
+from src.modules.realm.repository import MessageRepository
 from src.modules.realm.services import (
     BroadcastService,
     DisconnectFromServerService,
@@ -11,7 +12,7 @@ from src.modules.realm.services import (
 from src.utils.singlton_meta import SingletonMeta
 
 
-class ConnectionManager(metaclass=SingletonMeta):
+class _ConnectionManager(metaclass=SingletonMeta):
     _connections: dict[int, dict[int, Websocket]] = {}
 
     def __init__(
@@ -47,23 +48,25 @@ class ConnectionManager(metaclass=SingletonMeta):
         self,
         message: AbstractIncomingMessage,
     ) -> None:
-        logger.debug(f"TEST Broadcasting message: {message.body}")
-        logger.debug(f"TEST Broadcasting message: {message.content_type}")
-
         try:
             server_id = ujson.loads(message.body.decode(encoding='utf-8', errors='strict'))['server_id']
         except (ValueError, KeyError) as exc:
             logger.error(f"Error decoding incoming ws message or retrieving server_id: Error {str(exc)}")
             return
 
-        try:
-            pool_of_server_connections = self._connections[server_id]
-        except KeyError:
-            logger.error(f"No connections available for server_id: {server_id}")
-            return
+        pool_of_server_connections = self._connections[server_id]
 
         for _, ws_connection in pool_of_server_connections.items():
             try:
                 await ws_connection.send(message.body)
-            except Exception as e:
-                logger.error(f"Error sending message through WebSocket: {str(e)}")
+            except Exception as exc:
+                logger.error(f"Error sending message through WebSocket: {exc}")
+
+
+ConnectionManager: _ConnectionManager = _ConnectionManager(
+    connect_to_server_service=ConnectToServerService(
+        message_repository=MessageRepository(),
+    ),
+    disconnect_from_server_service=DisconnectFromServerService(),
+    broadcast_service=BroadcastService(),
+)

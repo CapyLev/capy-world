@@ -11,12 +11,12 @@ from aio_pika.abc import (
 )
 
 from config.constants import constants
-from src.modules.realm.repository import MessageRepository
-from src.modules.realm.services import ConnectToServerService, DisconnectFromServerService, BroadcastService
 from src.utils.singlton_meta import SingletonMeta
 from src.modules.realm.connection_manager import ConnectionManager
 
 from .interfaces import MessageTransmitter, MessageDTO
+
+logger = logging.getLogger(__name__)
 
 
 class RabbitMQTransmitter(MessageTransmitter, metaclass=SingletonMeta):
@@ -50,14 +50,6 @@ class RabbitMQTransmitter(MessageTransmitter, metaclass=SingletonMeta):
     async def connect(self) -> None:
         try:
             # TODO: Ну какая то лютая хуйня
-            connection_manager = ConnectionManager(
-                connect_to_server_service=ConnectToServerService(
-                    message_repository=MessageRepository(),
-                ),
-                disconnect_from_server_service=DisconnectFromServerService(),
-                broadcast_service=BroadcastService(),
-            )
-
             self.connection = await connect_robust(constants.rabbitmq.RABBITMQ_URL)
             self.channel = await self.connection.channel(publisher_confirms=False)
 
@@ -71,11 +63,11 @@ class RabbitMQTransmitter(MessageTransmitter, metaclass=SingletonMeta):
             )
 
             await self.queue.bind(self.exchange)
-            await self.queue.consume(connection_manager.broadcast, no_ack=True)
+            await self.queue.consume(ConnectionManager.broadcast, no_ack=True)
 
-            logging.info("Rabbitmq successfully connected.")
+            logger.info("Rabbitmq successfully connected.")
         except Exception as e:
-            logging.error(msg=str(e), extra=e.__dict__)
+            logger.error(msg=str(e), extra=e.__dict__)
             await self._clear()
 
     async def disconnect(self) -> None:

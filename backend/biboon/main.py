@@ -1,7 +1,7 @@
 import logging.config
 from typing import Any
 
-from sanic import Sanic
+from sanic import Sanic, SanicException
 from sanic_cors import CORS
 
 from config import constants, LOGGING_CONF, Storage
@@ -14,15 +14,21 @@ logging.config.dictConfig(LOGGING_CONF)
 
 
 def get_web_app() -> Sanic:
-    application = Sanic(
-        name=constants.server.NAME,
-        log_config=LOGGING_CONF,
-    )
-    Sanic.start_method = "fork"
+    try:
+        application = Sanic(
+            name=constants.server.NAME,
+        )
+    except SanicException:
+        application = Sanic.get_app(
+            name=constants.server.NAME,
+        )
+
+    Sanic.start_method = "forkserver"
 
     CORS(application, resources={r"/*": {"origins": constants.server.ORIGINS}})
 
     application.blueprint(blueprint=api)
+
     return application
 
 
@@ -41,17 +47,16 @@ async def close_all(*_: Any) -> None:
 
 
 if __name__ == "__main__":
-    app.run(
+    import uvicorn
+    uvicorn.run(
+        app="main:app",
         host=constants.server.HOST,
         port=constants.server.PORT,
-        single_process=True,
-        motd=True,
-        verbosity=2,
-        auto_reload=False,
-        # workers=constants.server.WORKERS,
-        # debug=constants.server.DEBUG,
-        # auto_reload=False,
-        # version=constants.server.HTTP_VERSION,
-        # dev=constants.server.DEBUG,
-        # access_log=True,
+        ws_max_size=constants.server.WEBSOCKET_MAX_SIZE,
+        ws_max_queue=constants.server.WEBSOCKET_MAX_QUEUE,
+        ws_ping_timeout=constants.server.WEBSOCKET_PING_TIMEOUT,
+        ws_ping_interval=constants.server.WEBSOCKET_PING_INTERVAL,
+        reload=True,
+        workers=constants.server.WORKERS,
+        log_config=LOGGING_CONF,
     )
