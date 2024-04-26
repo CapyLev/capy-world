@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+</head>
+<body>
+<h1>WebSocket Chat</h1>
+<div id="connectionStatus" style="font-weight: bold;"></div>
+<form onsubmit="sendMessage(event)">
+    <input type="text" id="messageText" autocomplete="off"/>
+    <button>Send</button>
+</form>
+<ul id='messages'></ul>
+<script>
+    var ws = new WebSocket("ws://localhost:6967/api/realm/ws/message_handler/1/1");
+    var connectionStatus = document.getElementById('connectionStatus');
+
+    ws.onopen = function(event) {
+        connectionStatus.textContent = "Connected";
+        connectionStatus.style.color = "green";
+    };
+
+    ws.onclose = function(event) {
+        connectionStatus.textContent = "Disconnected";
+        connectionStatus.style.color = "red";
+    };
+
+    ws.onmessage = function(event) {
+        var messages = document.getElementById('messages');
+        var message = document.createElement('li');
+        var reader = new FileReader();
+
+        reader.onload = function() {
+            var content = document.createTextNode(reader.result);
+            message.appendChild(content);
+            messages.appendChild(message);
+        };
+
+        reader.readAsText(event.data);
+    };
+
+
+    ws.onerror = function(event) {
+        console.error("WebSocket error observed:", event);
+    };
+
+    function sendMessage(event) {
+        var input = document.getElementById("messageText");
+        const msg = {
+            "server_id": 1,
+            "user_id": 1,
+            "content": input.value,
+            "attachments": [],
+            "created_at": Date.now().toString(),
+        };
+
+        ws.send(JSON.stringify(msg));
+        input.value = '';
+        event.preventDefault();
+    }
+</script>
+</body>
+</html>

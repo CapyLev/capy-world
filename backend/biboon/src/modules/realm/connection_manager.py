@@ -13,7 +13,9 @@ from src.utils.singlton_meta import SingletonMeta
 
 
 class _ConnectionManager(metaclass=SingletonMeta):
-    _connections: dict[int, dict[int, Websocket]] = {}
+    # TODO: на подумать. Dict[server_id: Dict[uuid: Dict[user_id: WS_CONN]]]
+    # _connections: dict[int, dict[str, dict[int, Websocket]]] = {}
+    _connections: dict[int, set[Websocket]] = {}
 
     def __init__(
         self,
@@ -32,9 +34,9 @@ class _ConnectionManager(metaclass=SingletonMeta):
         user_id: int,
     ) -> None:
         if server_id not in self._connections:
-            self._connections[server_id] = {}
-        self._connections[server_id][user_id] = ws
+            self._connections[server_id] = set()
 
+        self._connections[server_id].add(ws)
         await self._connect_to_server_service.execute(ws, server_id, user_id)
 
     async def disconnect(
@@ -42,7 +44,16 @@ class _ConnectionManager(metaclass=SingletonMeta):
         ws: Websocket,
         server_id: int,
         user_id: int,
-    ) -> None: ...
+    ) -> None:
+        server = self._connections.get(server_id, set())
+
+        try:
+            server.remove(ws)
+        except KeyError:
+            logger.warning(f'Server {server_id} has no connections for user {user_id}')
+            return
+
+        await self._disconnect_from_server_service.execute()
 
     async def broadcast(
         self,
@@ -54,9 +65,7 @@ class _ConnectionManager(metaclass=SingletonMeta):
             logger.error(f"Error decoding incoming ws message or retrieving server_id: Error {str(exc)}")
             return
 
-        pool_of_server_connections = self._connections[server_id]
-
-        for _, ws_connection in pool_of_server_connections.items():
+        for ws_connection in self._connections.get(server_id, set()):
             try:
                 await ws_connection.send(message.body)
             except Exception as exc:

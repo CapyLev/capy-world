@@ -23,7 +23,7 @@ def get_web_app() -> Sanic:
             name=constants.server.NAME,
         )
 
-    Sanic.start_method = "forkserver"
+    Sanic.start_method = "fork"
 
     CORS(application, resources={r"/*": {"origins": constants.server.ORIGINS}})
 

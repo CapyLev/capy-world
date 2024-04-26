@@ -17,7 +17,6 @@ async def send_message(uri):
             })
             print(f'Sending message: {message}')
             await ws.send(message)
-            await asyncio.sleep(1)
 
 
 async def receive_messages(uri):

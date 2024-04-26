@@ -5,7 +5,7 @@ class DisconnectFromServerService(metaclass=SingletonMeta):
     def __init__(self) -> None:
         pass
 
-    def execute(self) -> None:
+    async def execute(self) -> None:
         pass
 
 

@@ -37,9 +37,9 @@ class RabbitMQTransmitter(MessageTransmitter, metaclass=SingletonMeta):
         return True
 
     async def _clear(self) -> None:
-        if not self.channel.is_closed:
+        if self.channel and not self.channel.is_closed:
             await self.channel.close()
-        if not self.connection.is_closed:
+        if self.connection and not self.connection.is_closed:
             await self.connection.close()
 
         self.connection = None
@@ -49,7 +49,6 @@ class RabbitMQTransmitter(MessageTransmitter, metaclass=SingletonMeta):
 
     async def connect(self) -> None:
         try:
-            # TODO: Ну какая то лютая хуйня
             self.connection = await connect_robust(constants.rabbitmq.RABBITMQ_URL)
             self.channel = await self.connection.channel(publisher_confirms=False)
 
