@@ -4,6 +4,7 @@ from sanic import Request
 from sanic.response import JSONResponse
 
 from config.message_transmitter import RabbitMQTransmitter, RoutingKey, MessageDTO
+from src.modules.realm.connection_manager import ConnectionManager
 from src.modules.realm.daos import MessageDAO
 
 
@@ -32,3 +33,12 @@ async def test_rabbit_view(_: Request) -> JSONResponse:
         routing_key=RoutingKey.EVERYONE,
     )
     return JSONResponse(body={"message": "msg sended"})
+
+
+async def monitoring_view(_: Request) -> JSONResponse:
+    count_of_exist_ws_connections = sum(len(connections) for connections in ConnectionManager.connections.values())
+    result = {
+        "count_of_exist_ws_connections": count_of_exist_ws_connections,
+    }
+
+    return JSONResponse(result)

@@ -23,7 +23,6 @@ class ServerSettings(BaseSettings):
     WEBSOCKET_PING_TIMEOUT: int = Field(default=30)
     WEBSOCKET_CLOSE_TIME_OUT: int = Field(default=30)
     WEBSOCKET_MAX_RETRIES: int = Field(default=5)
-    WEBSOCKET_RETRY_INTERVAL: int = Field(default=5)
 
 
 class RabbitMQSettings(BaseSettings):

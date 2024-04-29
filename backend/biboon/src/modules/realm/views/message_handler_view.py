@@ -53,6 +53,9 @@ async def message_handler_view(
             used_retries += 1
         except Exception as exc:
             logger.critical(f"Unexpected exception: {exc}")
-            break
+            if used_retries >= constants.server.WEBSOCKET_MAX_RETRIES:
+                logger.warning("Maximum retries reached, stopping reconnect attempts.")
+                break
+            used_retries += 1
 
     await ConnectionManager.disconnect(ws=ws, server_id=server_id, user_id=user_id)
