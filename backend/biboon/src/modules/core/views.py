@@ -4,7 +4,7 @@ from sanic import Request
 from sanic.response import JSONResponse
 
 from config.message_transmitter import RabbitMQTransmitter, RoutingKey, MessageDTO
-from src.modules.realm.repository import MessageRepository
+from src.modules.realm.daos import MessageDAO
 
 
 async def ping_view(_: Request) -> JSONResponse:
@@ -20,15 +20,15 @@ msg = MessageDTO(
 
 
 async def test_mongo_view(_: Request) -> JSONResponse:
-    message_repository = MessageRepository()
-    await message_repository.insert_one(
+    message_dao = MessageDAO()
+    await message_dao.insert_one(
         message_dto=msg
     )
     return JSONResponse(body={"message": "Document inserted"})
 
 
 async def test_rabbit_view(_: Request) -> JSONResponse:
-    await RabbitMQTransmitter.send(
+    await RabbitMQTransmitter().send(
         message=msg,
         routing_key=RoutingKey.EVERYONE,
     )

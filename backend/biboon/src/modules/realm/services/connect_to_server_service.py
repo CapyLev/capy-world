@@ -1,22 +1,28 @@
 from sanic import Websocket
 
-from src.modules.realm.repository.message_repository import MessageRepository
+from src.modules.realm.daos.message_dao import MessageDAO
 from src.utils.singlton_meta import SingletonMeta
 
 
 class ConnectToServerService(metaclass=SingletonMeta):
+    DEFAULT_LAST_SERVER_MESSAGES_CHUNK_SIZE = 200
+
     def __init__(
         self,
-        message_repository: MessageRepository,
+        message_dao: MessageDAO,
     ) -> None:
-        self._message_repository = message_repository
+        self._message_dao = message_dao
 
     async def execute(
         self,
-        ws: Websocket,
         server_id: int,
-        user_id: int,
     ) -> None:
-        # in this service we can handle online status of user by keeping it in redis
-        # add fetching messages from storage and return it
-        pass
+        last_chunk_of_server_messages = await self._message_dao.fetch_last_server_messages(
+            server_id=server_id,
+            chunk_size=self.DEFAULT_LAST_SERVER_MESSAGES_CHUNK_SIZE,
+        )
+
+        print(last_chunk_of_server_messages)
+        print(len(last_chunk_of_server_messages))
+        print(type(last_chunk_of_server_messages))
+

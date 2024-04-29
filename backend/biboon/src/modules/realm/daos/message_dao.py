@@ -7,13 +7,13 @@ from src.utils.singlton_meta import SingletonMeta
 from ..models import MessageDocument
 
 
-class MessageRepository(metaclass=SingletonMeta):
+class MessageDAO(metaclass=SingletonMeta):
     DEFAULT_MESSAGE_CHUNK_SIZE = 200
 
-    class MessageRepositoryError(Exception):
+    class MessageDAOError(Exception):
         pass
 
-    class NotEnoughDataToInsertMessageError(MessageRepositoryError):
+    class NotEnoughDataToInsertMessageError(MessageDAOError):
         pass
 
     class MessageKwargsTyping(TypedDict):

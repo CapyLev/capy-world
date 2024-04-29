@@ -3,7 +3,7 @@ from aio_pika.abc import AbstractIncomingMessage
 from sanic import Websocket
 from sanic.log import logger
 
-from src.modules.realm.repository import MessageRepository
+from src.modules.realm.daos import MessageDAO
 from src.modules.realm.services import (
     BroadcastService,
     DisconnectFromServerService,
@@ -31,13 +31,12 @@ class _ConnectionManager(metaclass=SingletonMeta):
         self,
         ws: Websocket,
         server_id: int,
-        user_id: int,
     ) -> None:
         if server_id not in self._connections:
             self._connections[server_id] = set()
 
         self._connections[server_id].add(ws)
-        await self._connect_to_server_service.execute(ws, server_id, user_id)
+        await self._connect_to_server_service.execute(server_id)
 
     async def disconnect(
         self,
@@ -74,7 +73,7 @@ class _ConnectionManager(metaclass=SingletonMeta):
 
 ConnectionManager: _ConnectionManager = _ConnectionManager(
     connect_to_server_service=ConnectToServerService(
-        message_repository=MessageRepository(),
+        message_dao=MessageDAO(),
     ),
     disconnect_from_server_service=DisconnectFromServerService(),
     broadcast_service=BroadcastService(),

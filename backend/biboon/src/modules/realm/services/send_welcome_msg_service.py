@@ -2,7 +2,7 @@ from datetime import datetime
 
 from config import constants
 from config.message_transmitter import MessageTransmitter, RoutingKey, MessageDTO
-from src.modules.realm.repository import MessageRepository
+from src.modules.realm.daos import MessageDAO
 from src.utils.singlton_meta import SingletonMeta
 
 
@@ -11,10 +11,10 @@ class SendWelcomeMsgService(metaclass=SingletonMeta):
 
     def __init__(
         self,
-        message_repository: MessageRepository,
+        message_dao: MessageDAO,
         message_transmitter: MessageTransmitter,
     ) -> None:
-        self._message_repository = message_repository
+        self._message_dao = message_dao
         self._message_transmitter = message_transmitter
 
     async def execute(
@@ -29,7 +29,7 @@ class SendWelcomeMsgService(metaclass=SingletonMeta):
             created_at=datetime.now().isoformat(),
             content=self.WELCOME_MESSAGE_TMP.format(user_id=user_id),
         )
-        await self._message_repository.insert_one(
+        await self._message_dao.insert_one(
             message_dto=message,
         )
 
