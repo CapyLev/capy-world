@@ -1,4 +1,4 @@
-from src.realm.daos import ServerDAO, BiboonDAO, biboon_dao
+from src.realm.daos import ServerDAO, BiboonDAO
 
 
 class JoinToServerService:

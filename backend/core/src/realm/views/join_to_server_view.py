@@ -4,12 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from src.realm.daos import ServerDAO
+from src.realm.daos import ServerDAO, BiboonDAO
 from src.realm.services import JoinToServerService
 
 
 class JoinToServerSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField(read_only=True)
     server_id = serializers.IntegerField(read_only=True)
 
 
@@ -20,10 +19,14 @@ class JoinToServerView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        admin_id = request.user.id
+        user_id = request.user.id
 
         service = JoinToServerService(
             server_dao=ServerDAO(),
+            biboon_dao=BiboonDAO(),
         )
-        result = service.execute()
-        return Response(result, status=status.HTTP_201_CREATED)
+        service.execute(
+            user_id=user_id,
+            server_id=serializer.validated_data["user_id"],
+        )
+        return Response(status=status.HTTP_201_CREATED)

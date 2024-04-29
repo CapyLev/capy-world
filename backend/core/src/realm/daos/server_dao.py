@@ -9,7 +9,6 @@ class CreateServerDTO:
     admin_id: int
     name: str
     description: str | None
-    image: str | None
 
 
 class ServerDAO:
@@ -18,7 +17,6 @@ class ServerDAO:
             admin_id=data.admin_id,
             name=data.name,
             description=data.description,
-            image=data.image,
         )
         ServerMember.objects.create(
             server=server,
@@ -29,7 +27,6 @@ class ServerDAO:
             "admin_id": server.admin_id,
             "name": server.name,
             "description": server.description,
-            "image": server.image,
             "created_at": server.created_at,
         }
 

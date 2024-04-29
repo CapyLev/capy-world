@@ -6,7 +6,7 @@ from src.realm.models.server import Server
 
 class ServerMember(models.Model):
     server = models.ForeignKey(Server, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

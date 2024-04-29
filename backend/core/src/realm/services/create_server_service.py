@@ -12,13 +12,11 @@ class CreateServerService:
         admin_id: int,
         name: str,
         description: str | None,
-        image: str | None,
     ) -> dict[str, Any]:
         create_server_dto = CreateServerDTO(
             admin_id=admin_id,
             name=name,
             description=description,
-            image=image,
         )
         result = self._server_dao.create_user_server(data=create_server_dto)
         return result

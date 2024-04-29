@@ -10,8 +10,7 @@ from ..services import CreateServerService
 
 
 class CreateServerSerializer(serializers.ModelSerializer):
-    description = serializers.CharField(required=False, allow_blank=True)
-    image = serializers.ImageField(required=False)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Server
@@ -19,7 +18,6 @@ class CreateServerSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
-            "image",
         )
 
 
@@ -37,6 +35,5 @@ class CreateServerView(APIView):
             admin_id=admin_id,
             name=serializer.validated_data.get("name"),
             description=serializer.validated_data.get("description"),
-            image=serializer.validated_data.get("image"),
         )
         return Response(result, status=status.HTTP_201_CREATED)

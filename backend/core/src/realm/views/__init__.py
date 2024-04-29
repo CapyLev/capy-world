@@ -1,1 +1,2 @@
 from .create_server_view import CreateServerView
+from .join_to_server_view import JoinToServerView
