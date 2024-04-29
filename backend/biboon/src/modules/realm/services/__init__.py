@@ -1,4 +1,4 @@
-from .connect_to_server_service import ConnectToServerService
+from .send_last_messages_to_server_service import SendLastMessagesToServerService
 from .disconnect_from_server_service import DisconnectFromServerService
 from .broadcast_service import BroadcastService
 from .send_welcome_msg_service import SendWelcomeMsgService

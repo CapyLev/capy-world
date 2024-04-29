@@ -27,18 +27,9 @@
 
     ws.onmessage = function(event) {
         var messages = document.getElementById('messages');
-        var message = document.createElement('li');
-        var reader = new FileReader();
-
-        reader.onload = function() {
-            var content = document.createTextNode(reader.result);
-            message.appendChild(content);
-            messages.appendChild(message);
-        };
-
-        reader.readAsText(event.data);
+        var message = '<li>' + event.data + '</li>';
+        messages.insertAdjacentHTML('beforebegin', message);
     };
-
 
     ws.onerror = function(event) {
         console.error("WebSocket error observed:", event);

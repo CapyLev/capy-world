@@ -62,12 +62,13 @@ class MessageDAO(metaclass=SingletonMeta):
         server_id: int,
         chunk_size: int = DEFAULT_MESSAGE_CHUNK_SIZE,
     ) -> list[MessageDocument]:
-        messages = await MessageDocument.find(
-            MessageDocument.server_id == server_id,
-            sort=pymongo.DESCENDING,
-        ).to_list(length=chunk_size)
-
-        return messages
+        return (
+            await MessageDocument.find(
+                {"server_id": server_id},
+            )
+            .sort([(MessageDocument.created_at, pymongo.DESCENDING)])
+            .to_list(length=chunk_size)
+        )
 
     async def _create_message_document(
         self,

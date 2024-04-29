@@ -48,6 +48,7 @@ async def close_all(*_: Any) -> None:
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         app="main:app",
         host=constants.server.HOST,

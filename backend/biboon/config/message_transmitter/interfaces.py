@@ -18,7 +18,7 @@ class RoutingKey(enum.StrEnum):
 
 class MessageTransmitter:
     def status(self) -> bool:
-       raise NotImplementedError
+        raise NotImplementedError
 
     async def connect(self) -> None:
         raise NotImplementedError

@@ -1,4 +1,3 @@
-
 import json
 import asyncio
 from datetime import datetime
@@ -8,14 +7,16 @@ import websockets
 async def send_message(uri):
     async with websockets.connect(uri) as ws:
         while True:
-            message = json.dumps({
-                "server_id": 1,
-                "user_id": 1,
-                "content": "Test message",
-                "attachments": [],
-                "created_at": datetime.now().isoformat()
-            })
-            print(f'Sending message: {message}')
+            message = json.dumps(
+                {
+                    "server_id": 1,
+                    "user_id": 1,
+                    "content": "Test message",
+                    "attachments": [],
+                    "created_at": datetime.now().isoformat(),
+                }
+            )
+            print(f"Sending message: {message}")
             await ws.send(message)
 
 
@@ -23,7 +24,7 @@ async def receive_messages(uri):
     async with websockets.connect(uri) as ws:
         while True:
             message = await ws.recv()
-            print(f'Received message: {message}')
+            print(f"Received message: {message}")
 
 
 async def main():
