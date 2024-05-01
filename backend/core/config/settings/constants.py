@@ -12,6 +12,8 @@ class ServerSettings(BaseEnvSettings):
     SECRET_KEY: str = Field(default="123waewdqdpk)(UE)(@Y(HDihadiansdo9*UY()Q")
     DEBUG: bool = Field(default=True)
     ALLOWED_HOSTS: list[str] = Field(default=["*"])
+    CORS_ALLOWED_ORIGINS: list[str] = Field(default=['http://localhost:3000'])
+    CORS_ALLOW_CREDENTIALS: bool = Field(default=True)
 
 
 class DatabaseSettings(BaseEnvSettings):
