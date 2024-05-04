@@ -60,6 +60,7 @@ export default class Store {
     }
   }
 
+  // TODO: delete?
   async checkAuth() {
     try {
       this.setLoading(true)
@@ -74,13 +75,9 @@ export default class Store {
       if (response.status === 200) {
         await this.setUserInfo()
         this.setAuth(true)
-      } else {
-        this.setDefault();
       }
     } catch (error) {
-      console.log(error)
-    } finally {
-      this.setLoading(false)
+      this.setDefault();
     }
   }
 }

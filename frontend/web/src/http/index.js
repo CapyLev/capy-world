@@ -8,6 +8,11 @@ const api = axios.create({
   baseURL: API_URL,
 })
 
+export const auth_api = axios.create({
+  withCredentials: true,
+  baseURL: API_URL,
+})
+
 api.interceptors.request.use((config) => {
   const access_token = localStorage.getItem("access");
 
@@ -18,27 +23,30 @@ api.interceptors.request.use((config) => {
   return config;
 })
 
-api.interceptors.request.use((config) => {
+api.interceptors.response.use((config) => {
   return config;
 }, async (error) => {
-  console.log('handled 401');
-  const originalRequest = error.config;
-  if (error.response && error.response.status === 401) {
+  if (error.response.status === 401) {
     const refresh = localStorage.getItem("refresh");
+    const originalRequest = error.config;
 
     if (!refresh) {
       console.log('ny ya xz cho delat')
+      throw error
     }
 
     try {
       const response = await AuthService.refresh(refresh)
+      console.log(`refresh: ${response}`)
       localStorage.setItem('access', response.data.access)
-      localStorage.setItem('refresh', response.data.refresh)
+
+      return api.request(originalRequest);
     } catch (e) {
       console.log(e)
+      throw error;
     }
-    return api.request(originalRequest);
   }
-})
+  return Promise.reject(error);
+});
 
 export default api;
