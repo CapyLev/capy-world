@@ -23,4 +23,4 @@ class UserInfoView(views.APIView):
             'email': user.email,
             'data_joined': user.date_joined,
         }
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(user_data, status=status.HTTP_200_OK)
