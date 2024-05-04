@@ -1,6 +1,6 @@
 from typing import Any
 
-from src.realm.daos import ServerDAO, CreateServerDTO
+from src.realm.daos import ServerDAO
 
 
 class CreateServerService:
@@ -13,10 +13,15 @@ class CreateServerService:
         name: str,
         description: str | None,
     ) -> dict[str, Any]:
-        create_server_dto = CreateServerDTO(
+        result = self._server_dao.create_user_server(
             admin_id=admin_id,
             name=name,
             description=description,
         )
-        result = self._server_dao.create_user_server(data=create_server_dto)
-        return result
+
+        return {
+            "admin_id": result.admin_id,
+            "name": result.name,
+            "description": result.description,
+            "created_at": result.created_at,
+        }
