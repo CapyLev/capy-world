@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Route, Routes} from "react-router-dom";
 import {Context} from "../index";
 import PrivateRoute from "./PrivateRoute";
-import AuthPage from "../pages/AuthPage";
+import AuthPage from "../pages/AuthPage/AuthPage";
 import HomePage from "../pages/HomePage";
 
 export const useRoutes = () => {

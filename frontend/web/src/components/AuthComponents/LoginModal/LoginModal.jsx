@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import style from "../AuthComponents.module.css"
 import Button from "../../Button/Button";
 
+
 const LoginModal = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

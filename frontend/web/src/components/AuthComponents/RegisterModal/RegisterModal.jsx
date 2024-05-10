@@ -5,6 +5,7 @@ import style from "../AuthComponents.module.css"
 import {useNavigate} from "react-router-dom";
 import Button from "../../Button/Button";
 
+
 const RegisterModal = (props) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
