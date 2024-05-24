@@ -1,6 +1,8 @@
 import os.path
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 from .constants import application_consts
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -15,8 +17,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "drf_yasg",
-    "rest_framework",
-    "src.account",
+    "src.profile",
     "src.realm",
 ]
 
@@ -36,7 +37,9 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -59,5 +62,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+LOGIN_REDIRECT_URL = reverse_lazy('realm:home') #TODO:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

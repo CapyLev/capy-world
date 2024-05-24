@@ -1,3 +1,2 @@
 from .create_server_view import CreateServerView
 from .join_to_server_view import JoinToServerView
-from .get_user_server_view import GetUserServersView

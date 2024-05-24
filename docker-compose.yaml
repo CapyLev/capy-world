@@ -29,6 +29,7 @@ services:
     volumes:
       - ./backend/core/src:/app/backend/core/src
       - ./backend/core/config:/app/backend/core/config
+      - ./backend/core/templates:/app/backend/core/templates
       - static_data:/app/backend/core/config/static
       - media_data:/app/backend/core/config/media
     networks:

@@ -1,9 +1,8 @@
 from django.urls import path
 
-from .views import CreateServerView, JoinToServerView, GetUserServersView
+from .views import CreateServerView, JoinToServerView
 
 urlpatterns = [
-    path("create/", CreateServerView.as_view(), name="create"),
-    path("join/", JoinToServerView.as_view(), name="join"),
-    path("", GetUserServersView.as_view(), name="get"),
+    path("create/", CreateServerView, name="create"),
+    path("join/", JoinToServerView, name="join"),
 ]
