@@ -1,0 +1,1 @@
+from .get_user_details_view import GetUserDetailsView
