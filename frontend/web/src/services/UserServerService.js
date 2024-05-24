@@ -2,6 +2,6 @@ import api from "../http";
 
 export default class UserServerService {
   static async fetchUserServers() {
-    return api.get('/'); // TODO:
+    return api.get('/api/realm/');
   }
 }
