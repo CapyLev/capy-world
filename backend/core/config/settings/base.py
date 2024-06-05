@@ -19,6 +19,8 @@ INSTALLED_APPS = [
     "drf_yasg",
     "src.profile",
     "src.realm",
+    "src.landing",
+    "src.account",
 ]
 
 MIDDLEWARE = [
@@ -63,6 +65,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-LOGIN_REDIRECT_URL = reverse_lazy('realm:home') #TODO:
+LOGIN_REDIRECT_URL = reverse_lazy('home_page')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

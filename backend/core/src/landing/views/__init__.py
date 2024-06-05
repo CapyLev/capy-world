@@ -1,0 +1,1 @@
+from .landing_page_view import LandingPageTemplateView

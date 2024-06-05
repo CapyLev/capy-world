@@ -1,8 +1,7 @@
 from django.urls import path
 
-from .views import CreateServerView, JoinToServerView
+from .views import HomePageTemplateView
 
 urlpatterns = [
-    path("create/", CreateServerView, name="create"),
-    path("join/", JoinToServerView, name="join"),
+    path('', HomePageTemplateView.as_view(), name='home_page'),
 ]

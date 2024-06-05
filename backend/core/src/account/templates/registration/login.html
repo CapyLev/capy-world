@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base/base_landing.html" %}
 
 {% load static %}
 
@@ -169,48 +169,50 @@
 {% endblock %}
 
 {% block content %}
-    <form autocomplete='off' class='form' method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class='control block-cube block-input'>
-            {{ form.username.errors }}
-            <input name='username' placeholder='Username' type='text'>
-            <div class='bg-top'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='bg-right'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='bg'>
-                <div class='bg-inner'></div>
-            </div>
-        </div>
-        <div class='control block-cube block-input'>
-            {{ form.password.errors }}
-            <input name='password' placeholder='Password' type='text'>
-            <div class='bg-top'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='bg-right'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='bg'>
-                <div class='bg-inner'></div>
-            </div>
-        </div>
-        <button class='btn block-cube block-cube-hover' type='submit'>
-            <div class='bg-top'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='bg-right'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='bg'>
-                <div class='bg-inner'></div>
-            </div>
-            <div class='text'>
-                Log In
-            </div>
-        </button>
-    </form>
+	<div style="margin-top: 50px">
+		<form autocomplete='off' class='form' method="post">
+			{% csrf_token %}
+			{{ form.non_field_errors }}
+			<div class='control block-cube block-input'>
+				{{ form.username.errors }}
+				<input name='username' placeholder='Username' type='text'>
+				<div class='bg-top'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='bg-right'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='bg'>
+					<div class='bg-inner'></div>
+				</div>
+			</div>
+			<div class='control block-cube block-input'>
+				{{ form.password.errors }}
+				<input name='password' placeholder='Password' type='password'>
+				<div class='bg-top'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='bg-right'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='bg'>
+					<div class='bg-inner'></div>
+				</div>
+			</div>
+			<button class='btn block-cube block-cube-hover' type='submit'>
+				<div class='bg-top'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='bg-right'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='bg'>
+					<div class='bg-inner'></div>
+				</div>
+				<div class='text'>
+					Log In
+				</div>
+			</button>
+		</form>
+	</div>
 {% endblock %}

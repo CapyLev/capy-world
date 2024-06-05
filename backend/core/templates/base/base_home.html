@@ -1,0 +1,76 @@
+{% extends 'base/base.html' %}
+
+{% block additional_css %}
+	<style>
+        html, body {
+            color: #fff;
+            font-family: monospace, serif;
+            letter-spacing: 0.05em;
+            height: 100%;
+            margin: 0;
+            background: #36393f;
+        }
+
+        nav {
+            background: #202225;
+            float: left;
+            height: 100%;
+            width: 72px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding-top: 12px;
+        }
+
+        nav a {
+            display: block;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #36393f;
+
+            position: relative;
+
+            transition: border-radius 250ms, background 250ms;
+        }
+
+        nav hr {
+            display: block;
+            width: 32px;
+            height: 2px;
+            border-radius: 196px;
+            border: none;
+            background: #36393f;
+        }
+
+        nav a:hover,
+        nav a.active {
+            border-radius: 25%;
+            background: #3ba55d;
+        }
+	</style>
+{% endblock %}
+
+{% block additional_js %}
+	{{ block.super }}
+
+	<script>
+      const nav_links = document.querySelectorAll('a');
+      nav_links.forEach(anchor => anchor.addEventListener('click', (event) => {
+        event.preventDefault();
+        nav_links.forEach(anchor => anchor.className = '');
+        anchor.className = 'active';
+      }));
+	</script>
+{% endblock %}
+
+{% block navbar %}
+	<nav>
+		<a href="" class="active"></a>
+		<hr>
+		<a href=""></a>
+		<a href=""></a>
+	</nav>
+{% endblock %}
