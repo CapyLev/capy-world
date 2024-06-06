@@ -1,4 +1,5 @@
 import os.path
+import sys
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -7,6 +8,7 @@ from .constants import application_consts
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DEBUG = application_consts.server.DEBUG
+TESTING = 'test' in sys.argv
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -21,6 +23,7 @@ INSTALLED_APPS = [
     "src.realm",
     "src.landing",
     "src.account",
+    "src.core",
 ]
 
 MIDDLEWARE = [
@@ -68,3 +71,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 LOGIN_REDIRECT_URL = reverse_lazy('home_page')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+if DEBUG and not TESTING:
+    MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+    INSTALLED_APPS += ('debug_toolbar',)
