@@ -5,3 +5,4 @@ static
 pg_data
 rabbitmq_data
 *.log
+redis_data/
