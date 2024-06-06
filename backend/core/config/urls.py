@@ -14,8 +14,8 @@ urlpatterns = [
         schema_view.with_ui("swagger"),
         name="schema-swagger-ui",
     ),
+    path("__debug__/", include("debug_toolbar.urls"))
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

@@ -2,6 +2,7 @@ import os.path
 import sys
 from pathlib import Path
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.urls import reverse_lazy
 
 from .constants import application_consts
@@ -75,3 +76,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 if DEBUG and not TESTING:
     MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
     INSTALLED_APPS += ('debug_toolbar',)
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
+    }
+

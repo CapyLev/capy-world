@@ -21,8 +21,3 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ALLOW_CREDENTIALS = application_consts.server.CORS_ALLOW_CREDENTIALS
 CORS_ALLOWED_ORIGINS = application_consts.server.CORS_ALLOWED_ORIGINS
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-    'localhost',
-]

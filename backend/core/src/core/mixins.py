@@ -10,7 +10,5 @@ class UserServersMixin(ContextMixin):
         user_id = self.request.user.id
 
         service = GetUserServersService(server_dao=ServerDAO())
-        user_servers = service.execute(user_id)
-
-        context["user_servers"] = user_servers
+        context["user_servers"] = service.execute(user_id)
         return context

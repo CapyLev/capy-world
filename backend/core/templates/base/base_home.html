@@ -72,14 +72,11 @@
 			<a href="{% url 'home_page' %}" class={% if home_url == 'home_page' %}active{% endif %}></a>
 		{% endwith %}
 		<hr>
-		{% for server_member in user_servers %}
-			<a href="#"></a>
-{#			{% with server_url=request.resolver_match.url_name server_id=server_member.server.id %}#}
-{#				<a href="#"#}
-{#				   class="{% if server_url == 'server_detail' and server_id == request.resolver_match.kwargs.id %}active{% endif %}">#}
-{#					{{ server_member.server.name }}#}
-{#				</a>#}
-{#			{% endwith %}#}
+		{% for server in user_servers %}
+			<a href="{% url 'realm_page' server.id %}"
+			   class="{% if 'realm_page' == request.resolver_match.url_name and server.id == server_id %}active{% endif %}">
+				{{ server_member.server.name }}
+			</a>
 		{% endfor %}
 	</nav>
 {% endblock %}
