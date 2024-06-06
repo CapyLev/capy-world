@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('realm', '0002_alter_server_admin'),
+        ("realm", "0002_alter_server_admin"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='server',
-            name='image',
+            model_name="server",
+            name="image",
         ),
     ]

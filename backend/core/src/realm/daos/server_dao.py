@@ -21,11 +21,6 @@ class ServerDTO:
     description: str | None = None
 
 
-@dataclass(frozen=True, slots=True)
-class UserServersDTO:
-    servers: list[ServerDTO]
-
-
 class ServerDAO:
     def create_user_server(
         self,
@@ -69,19 +64,16 @@ class ServerDAO:
             user_id=user_id,
         )
 
-    def get_user_servers(self, user_id: int) -> UserServersDTO:
-        server_ids = ServerMember.objects.values('server_id').filter(user_id=user_id)
-        servers = Server.objects.values().filter(id__in=server_ids)
-
-        return UserServersDTO(
-            servers=[
-                ServerDTO(
-                    id=server.id,
-                    admin_id=server.admin_id,
-                    description=server.description,
-                    name=server.name,
-                    created_at=server.created_at,
-                )
-                for server in servers
-            ],
-        )
+    def get_user_servers(self, user_id: int) -> list[ServerDTO]:
+        return [
+            ServerDTO(
+                id=server_member.server_id,
+                admin_id=server_member.server.admin_id,
+                description=server_member.server.description,
+                name=server_member.server.name,
+                created_at=server_member.server.created_at,
+            )
+            for server_member in ServerMember.objects.select_related("server").filter(
+                user_id=user_id
+            )
+        ]

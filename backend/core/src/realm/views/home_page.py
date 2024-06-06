@@ -1,5 +1,5 @@
-from django.views.generic import TemplateView
+from src.core.views import RealmTemplateView
 
 
-class HomePageTemplateView(TemplateView):
-    template_name = 'home/home_page.html'
+class HomePageTemplateView(RealmTemplateView):
+    template_name = "home/home_page.html"
