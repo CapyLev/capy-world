@@ -30,8 +30,8 @@ services:
       - ./backend/core/src:/app/backend/core/src
       - ./backend/core/config:/app/backend/core/config
       - ./backend/core/templates:/app/backend/core/templates
-      - static_data:/app/backend/core/config/static
-      - media_data:/app/backend/core/config/media
+      - static_data:/app/backend/core/static
+      - media_data:/app/backend/core/media
     networks:
       - capy-world-network
 
@@ -65,8 +65,8 @@ services:
     ports:
       - '69:8080'
     volumes:
-      - static_data:/app/backend/core/config/static
-      - media_data:/app/backend/core/config/media
+      - static_data:/app/backend/core/static
+      - media_data:/app/backend/core/media
     networks:
       - capy-world-network
 
