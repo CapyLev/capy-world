@@ -5,6 +5,7 @@ from src.realm.daos import ServerDAO, ServerMembersDTO
 
 @dataclass(frozen=True, slots=True)
 class _GetServerDataContexDTO:
+    server_id: int
     server_members: list[ServerMembersDTO]
     server_name: str
 
@@ -24,6 +25,7 @@ class GetServerDataService:
         server_name = self._server_dao.get_server_by_id(server_id).name
 
         return _GetServerDataContexDTO(
+            server_id=server_id,
             server_members=server_members,
             server_name=server_name,
         )

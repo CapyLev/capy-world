@@ -22,4 +22,5 @@ class ChatPageTemplateView(RealmTemplateView):
 
         context['server_members'] = data.server_members
         context['server_name'] = data.server_name
+        context['server_id'] = data.server_id
         return context

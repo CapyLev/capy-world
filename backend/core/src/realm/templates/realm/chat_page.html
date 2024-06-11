@@ -140,7 +140,7 @@
     {{ block.super }}
     <script>
       document.addEventListener('DOMContentLoaded', (event) => {
-        var ws = new WebSocket("ws://localhost:6967/api/realm/ws/message_handler/1/1");
+        const ws = new WebSocket("ws://localhost:6967/api/realm/ws/message_handler/1/1");
 
         ws.onopen = function(event) {
           console.log("Connected to WebSocket server.");
@@ -151,7 +151,7 @@
         };
 
         ws.onmessage = function(event) {
-          var messageData = JSON.parse(event.data);
+          const messageData = JSON.parse(event.data);
           addMessage(messageData, false);
         };
 
@@ -161,12 +161,12 @@
 
         function sendMessage(event) {
           event.preventDefault();
-          var input = document.getElementById("chat-input");
+          const input = document.getElementById("chat-input");
           if (input.value.trim() === "") return;
 
           const msg = {
-            "server_id": 1,
-            "user_id": 1,
+            "server_id": {{ server_id }},
+            "user_id": {{ request.user.id }},
             "content": input.value,
             "attachments": [],
             "created_at": new Date().toISOString(),
@@ -178,23 +178,23 @@
         }
 
         function addMessage(message, isSent) {
-          var messagesContainer = document.getElementById('messages');
+          const messagesContainer = document.getElementById('messages');
 
-          var messageElement = document.createElement('div');
+          const messageElement = document.createElement('div');
           messageElement.classList.add('message');
           messageElement.classList.add(isSent ? 'sent' : 'received');
 
-          var messageInfo = document.createElement('div');
+          const messageInfo = document.createElement('div');
           messageInfo.classList.add('message-info');
 
-          var circle = document.createElement('div');
+          const circle = document.createElement('div');
           circle.classList.add('circle');
 
-          var username = document.createElement('span');
+          const username = document.createElement('span');
           username.classList.add('username');
           username.textContent = isSent ? 'You' : message.username;
 
-          var createdAt = document.createElement('span');
+          const createdAt = document.createElement('span');
           createdAt.classList.add('created-at');
           createdAt.textContent = new Date(message.created_at).toLocaleTimeString();
 
@@ -202,7 +202,7 @@
           messageInfo.appendChild(username);
           messageInfo.appendChild(createdAt);
 
-          var messageContent = document.createElement('div');
+          const messageContent = document.createElement('div');
           messageContent.classList.add('message-content');
           messageContent.textContent = message.content;
 
