@@ -1,0 +1,49 @@
+{% block additional_css %}
+    <style>
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 23px;
+            background: #2c2f33;
+            color: white;
+            width: 100%;
+            box-sizing: border-box;
+            border-bottom: 2px solid #202225;
+        }
+
+        .server-name {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .top-bar-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-bar-buttons .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .top-bar-buttons .search-input {
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block server_bar %}
+    <div class="top-bar">
+        <div class="server-name">{{ server_name }}</div>
+        <div class="top-bar-buttons">
+            <input type="text" placeholder="Поиск" class="search-input">
+            <a href="https://github.com/CapyLev/capy-world" target="_blank">
+                <p>Github</p>
+            </a>
+        </div>
+    </div>
+{% endblock %}

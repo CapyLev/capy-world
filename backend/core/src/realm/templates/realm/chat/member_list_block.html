@@ -1,0 +1,56 @@
+{% block additional_css %}
+    <style>
+        .members-panel {
+            width: 10%;
+            margin: 20px;
+        }
+
+        #members-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            background: rgba(44, 47, 51, 0.5);
+            border: 1px solid #202225;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .member-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .member-item:hover .circle:before {
+            width: 16px;
+            height: 16px;
+        }
+
+        .member-name {
+            position: relative;
+            top: -2px;
+        }
+
+        .member-item.admin .member-name {
+            color: gold;
+        }
+    </style>
+{% endblock %}
+
+{% block members_panel %}
+    <div class="members-panel">
+        <ul id="members-list">
+            {% for member in server_members %}
+                <li class="member-item {% if member.is_admin %}admin{% endif %}">
+                    <div class="circle"></div>
+                    <span class="member-name">{{ member.username }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

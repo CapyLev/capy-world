@@ -28,7 +28,7 @@
             display: block;
             width: 48px;
             height: 48px;
-            border-radius: 50%;
+            border-radius: 70%;
             background: #36393f;
 
             position: relative;
@@ -38,11 +38,8 @@
 
         nav hr {
             display: block;
-            width: 32px;
-            height: 2px;
-            border-radius: 196px;
-            border: none;
-            background: #36393f;
+            width: 52px;
+            background: #484b51;
         }
 
         nav a:hover,
@@ -73,8 +70,8 @@
 		{% endwith %}
 		<hr>
 		{% for server in user_servers %}
-			<a href="{% url 'realm_page' server.id %}"
-			   class="{% if 'realm_page' == request.resolver_match.url_name and server.id == server_id %}active{% endif %}">
+			<a href="{% url 'chat_page' server.id %}"
+			   class="{% if 'chat_page' == request.resolver_match.url_name and server.id == server_id %}active{% endif %}">
 				{{ server_member.server.name }}
 			</a>
 		{% endfor %}

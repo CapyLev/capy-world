@@ -2,10 +2,12 @@ from dataclasses import dataclass
 
 from src.realm.daos import ServerDAO, ServerMembersDTO
 
+
 @dataclass(frozen=True, slots=True)
 class _GetServerDataContexDTO:
     server_members: list[ServerMembersDTO]
     server_name: str
+
 
 class GetServerDataService:
     def __init__(

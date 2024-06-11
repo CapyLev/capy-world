@@ -5,8 +5,8 @@ from ..daos import ServerDAO
 from ..services import GetServerDataService
 
 
-class RealmPageTemplateView(RealmTemplateView):
-    template_name = "realm/realm_page.html"
+class ChatPageTemplateView(RealmTemplateView):
+    template_name = "realm/chat_page.html"
 
     def get_context_data(
         self,

@@ -1,0 +1,185 @@
+{% extends 'home/home_page.html' %}
+{% load static %}
+
+{% block additional_css %}
+    {{ block.super }}
+    <style>
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .content-container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            height: 100vh;
+        }
+
+        .messages-container {
+            flex-grow: 1;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding-right: 20px;
+            padding-left: 20px;
+            padding-top: 20px;
+            background: #2c2f33;
+            position: relative;
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            background: #3a3d42;
+            color: white;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #4a4d52;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: #2e3136;
+        }
+
+        .message-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .circle {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #7289da;
+            margin-right: 10px;
+        }
+
+        .username {
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+
+        .created-at {
+            font-size: 0.7em;
+            color: #b9bbbe;
+        }
+
+        .message-content {
+            word-wrap: break-word;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 8px;
+            background: #202225;
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #send-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #3ba55d;
+            color: white;
+            cursor: pointer;
+        }
+
+        .circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #202225;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .circle:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: #202225;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+    </style>
+{% endblock %}
+
+{% block additional_js %}
+    {{ block.super }}
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block chat_place %}
+    <div class="main-container">
+        {% include 'realm/chat/server_bar_block.html' %}
+        {% block chat_block %}
+            <div class="content-container">
+                <div class="chat-container">
+                    <div class="messages-container">
+                        <div class="messages" id="messages">
+
+                            <div class="message sent">
+                                <div class="message-info">
+                                    <div class="circle"></div>
+                                    <span class="username">You</span>
+                                    <span class="created-at">12:00</span>
+                                </div>
+                                <div class="message-content">Hello, this is a message from you!</div>
+                            </div>
+
+
+                            <div class="message received">
+                                <div class="message-info">
+                                    <div class="circle"></div>
+                                    <span class="username">OtherUser</span>
+                                    <span class="created-at">12:01</span>
+                                </div>
+                                <div class="message-content">Hello, this is a message from another user!</div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" id="chat-input" placeholder="Введите сообщение...">
+                        <button id="send-button">Отправить</button>
+                    </div>
+                </div>
+                {% include 'realm/chat/member_list_block.html' %}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
