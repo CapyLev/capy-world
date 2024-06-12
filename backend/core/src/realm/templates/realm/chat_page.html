@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block additional_css %}
-    {{ block.super }}
-    <style>
+	{{ block.super }}
+	<style>
         .main-container {
             display: flex;
             flex-direction: column;
@@ -20,7 +20,6 @@
             display: flex;
             flex-direction: column;
             width: 90%;
-            height: 100vh;
         }
 
         .messages-container {
@@ -32,6 +31,10 @@
             padding-top: 20px;
             background: #2c2f33;
             position: relative;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            display: none;
         }
 
         .messages {
@@ -103,7 +106,6 @@
         }
 
         #send-button {
-            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             background: #3ba55d;
@@ -133,29 +135,33 @@
             transform: translate(-50%, -50%);
             transition: width 0.3s, height 0.3s;
         }
-    </style>
+	</style>
 {% endblock %}
 
 {% block additional_js %}
-    {{ block.super }}
-    <script>
+	{{ server_members|json_script:"server_members" }}
+	{{ block.super }}
+	<script>
+      const members = JSON.parse(document.getElementById('server_members').textContent);
+      const userId = {{ request.user.id }};
       document.addEventListener('DOMContentLoaded', (event) => {
-        const ws = new WebSocket("ws://localhost:6967/api/realm/ws/message_handler/1/1");
+        const ws = new WebSocket(`ws://localhost:6967/api/realm/ws/message_handler/{{ server_id }}/${userId}`);
 
-        ws.onopen = function(event) {
+        ws.onopen = function (event) {
           console.log("Connected to WebSocket server.");
         };
 
-        ws.onclose = function(event) {
+        ws.onclose = function (event) {
           console.log("Disconnected from WebSocket server.");
         };
 
-        ws.onmessage = function(event) {
+        ws.onmessage = function (event) {
           const messageData = JSON.parse(event.data);
-          addMessage(messageData, false);
+          const isIncomingMessageFromRequestUser = userId === messageData.user_id
+          addMessage(messageData, isIncomingMessageFromRequestUser);
         };
 
-        ws.onerror = function(event) {
+        ws.onerror = function (event) {
           console.error("WebSocket error observed:", event);
         };
 
@@ -166,14 +172,13 @@
 
           const msg = {
             "server_id": {{ server_id }},
-            "user_id": {{ request.user.id }},
+            "user_id": userId,
             "content": input.value,
             "attachments": [],
             "created_at": new Date().toISOString(),
           };
 
           ws.send(JSON.stringify(msg));
-          addMessage(msg, true);
           input.value = '';
         }
 
@@ -192,7 +197,7 @@
 
           const username = document.createElement('span');
           username.classList.add('username');
-          username.textContent = isSent ? 'You' : message.username;
+          username.textContent = isSent ? 'You' : members[userId].username;
 
           const createdAt = document.createElement('span');
           createdAt.classList.add('created-at');
@@ -210,7 +215,8 @@
           messageElement.appendChild(messageContent);
 
           messagesContainer.appendChild(messageElement);
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          {#messagesContainer.scrollTop = messagesContainer.scrollHeight;#}
+          messageElement.scrollIntoView({behavior: 'smooth'});
         }
 
         document.getElementById('send-button').addEventListener('click', sendMessage);
@@ -220,47 +226,47 @@
           }
         });
       });
-    </script>
+	</script>
 {% endblock %}
 
 
 {% block chat_place %}
-    <div class="main-container">
-        {% include 'realm/chat/server_bar_block.html' %}
-        {% block chat_block %}
-            <div class="content-container">
-                <div class="chat-container">
-                    <div class="messages-container">
-                        <div class="messages" id="messages">
-{#                      Пример сообщений                                    #}
-{#                            <div class="message sent">#}
-{#                                <div class="message-info">#}
-{#                                    <div class="circle"></div>#}
-{#                                    <span class="username">You</span>#}
-{#                                    <span class="created-at">12:00</span>#}
-{#                                </div>#}
-{#                                <div class="message-content">Hello, this is a message from you!</div>#}
-{#                            </div>#}
-{##}
-{##}
-{#                            <div class="message received">#}
-{#                                <div class="message-info">#}
-{#                                    <div class="circle"></div>#}
-{#                                    <span class="username">OtherUser</span>#}
-{#                                    <span class="created-at">12:01</span>#}
-{#                                </div>#}
-{#                                <div class="message-content">Hello, this is a message from another user!</div>#}
-{#                            </div>#}
-{##}
-                        </div>
-                    </div>
-                    <div class="input-container">
-                        <input type="text" id="chat-input" placeholder="Введите сообщение...">
-                        <button id="send-button">Отправить</button>
-                    </div>
-                </div>
-                {% include 'realm/chat/member_list_block.html' %}
-            </div>
-        {% endblock %}
-    </div>
+	<div class="main-container">
+		{% include 'realm/chat/server_bar_block.html' %}
+		{% block chat_block %}
+			<div class="content-container">
+				<div class="chat-container">
+					<div class="messages-container">
+						<div class="messages" id="messages">
+							{#                      Пример сообщений                                    #}
+							{#                            <div class="message sent">#}
+							{#                                <div class="message-info">#}
+							{#                                    <div class="circle"></div>#}
+							{#                                    <span class="username">You</span>#}
+							{#                                    <span class="created-at">12:00</span>#}
+							{#                                </div>#}
+							{#                                <div class="message-content">Hello, this is a message from you!</div>#}
+							{#                            </div>#}
+							{##}
+							{##}
+							{#                            <div class="message received">#}
+							{#                                <div class="message-info">#}
+							{#                                    <div class="circle"></div>#}
+							{#                                    <span class="username">OtherUser</span>#}
+							{#                                    <span class="created-at">12:01</span>#}
+							{#                                </div>#}
+							{#                                <div class="message-content">Hello, this is a message from another user!</div>#}
+							{#                            </div>#}
+							{##}
+						</div>
+					</div>
+					<div class="input-container">
+						<input type="text" id="chat-input" placeholder="Введите сообщение...">
+						<button id="send-button">Отправить</button>
+					</div>
+				</div>
+				{% include 'realm/chat/member_list_block.html' %}
+			</div>
+		{% endblock %}
+	</div>
 {% endblock %}

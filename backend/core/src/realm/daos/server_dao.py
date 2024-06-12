@@ -32,10 +32,10 @@ class ServerMembersDTO:
 
 class ServerDAO:
     def create_user_server(
-            self,
-            admin_id: int,
-            name: str,
-            description: str | None = None,
+        self,
+        admin_id: int,
+        name: str,
+        description: str | None = None,
     ) -> CreateServerDTO:
         server = Server.objects.create(
             admin_id=admin_id,
@@ -55,9 +55,9 @@ class ServerDAO:
         )
 
     def check_if_user_already_joined(
-            self,
-            server_id: int,
-            user_id: int,
+        self,
+        server_id: int,
+        user_id: int,
     ) -> bool:
         return ServerMember.objects.filter(
             server_id=server_id, user_id=user_id

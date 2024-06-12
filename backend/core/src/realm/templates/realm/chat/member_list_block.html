@@ -36,21 +36,21 @@
             top: -2px;
         }
 
-        .member-item.admin .member-name {
+        .member-item.you .member-name {
             color: gold;
         }
     </style>
 {% endblock %}
 
 {% block members_panel %}
-    <div class="members-panel">
-        <ul id="members-list">
-            {% for member in server_members %}
-                <li class="member-item {% if member.is_admin %}admin{% endif %}">
-                    <div class="circle"></div>
-                    <span class="member-name">{{ member.username }}</span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+	<div class="members-panel">
+		<ul id="members-list">
+			{% for user_id, member in server_members.items %}
+				<li class="member-item {% if user_id == request.user.id %}you{% endif %}">
+					<div class="circle"></div>
+					<span class="member-name">{{ member.username }}</span>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
 {% endblock %}
