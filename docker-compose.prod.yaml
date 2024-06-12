@@ -1,0 +1,86 @@
+version: '3.9'
+
+services:
+  capy-core-server:
+    build:
+      context: ./backend/core
+      dockerfile: ./Dockerfile
+      target: dev
+    container_name: capy_core_server
+    command: sh -c "./entrypoint.sh"
+    restart: always
+    ports:
+      - '6969:6969'
+    env_file:
+      - ./backend/core/.env
+    volumes:
+      - ./backend/core/src:/app/backend/core/src
+      - ./backend/core/config:/app/backend/core/config
+      - ./backend/core/templates:/app/backend/core/templates
+      - static_data:/app/backend/core/static
+      - media_data:/app/backend/core/media
+    networks:
+      - capy-world-network
+
+  capy-biboon-server:
+    build:
+      context: ./backend/biboon
+      dockerfile: ./Dockerfile
+      target: dev
+    container_name: capy_biboon_server
+    command: sh -c "./entrypoint.sh"
+    restart: always
+    ports:
+      - '6967:6900'
+    env_file:
+      - ./backend/biboon/.env
+    volumes:
+      - ./backend/biboon/src:/app/backend/biboon/src
+      - ./backend/biboon/config:/app/backend/biboon/config
+      - ./backend/biboon/main.py:/app/backend/biboon/main.py
+      - ./backend/biboon/logs:/app/backend/biboon/logs
+    networks:
+      - capy-world-network
+
+  capy-core-nginx:
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+      target: dev
+    container_name: nginx
+    restart: always
+    ports:
+      - '69:8080'
+    volumes:
+      - static_data:/app/backend/core/static
+      - media_data:/app/backend/core/media
+    networks:
+      - capy-world-network
+
+  capy-core-rabbitmq:
+    image: rabbitmq:3.13.1-management
+    container_name: capy-core-rabbitmq
+    ports:
+      - "15627:15672"
+      - "5672:5672"
+    env_file:
+      - ./backend/biboon/.env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - capy-world-network
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  pg_data:
+  static_data:
+  media_data:
+  rabbitmq_data:
+
+networks:
+  capy-world-network:
+    driver: bridge
