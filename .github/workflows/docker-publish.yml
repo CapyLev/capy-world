@@ -1,4 +1,4 @@
-name: ollama-webui
+name: docker-build-and-release
 
 on:
   push:
