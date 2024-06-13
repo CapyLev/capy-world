@@ -12,4 +12,4 @@ jobs:
 
     steps:
     - name: releases
-      run: make release_all
+      run: make release_all -f Makefile
