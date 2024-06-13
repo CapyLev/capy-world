@@ -28,7 +28,7 @@ COPY pyproject.toml poetry.lock /app/backend/core/
 RUN python3 -m pip install poetry
 COPY pyproject.toml poetry.lock /app/backend/core/
 
-RUN poetry export --without-hashes --format=requirements.txt > requirements.txt
+RUN poetry export --without dev --without-hashes --format=requirements.txt > requirements.txt
 
 
 FROM base AS dev
