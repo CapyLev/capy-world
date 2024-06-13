@@ -21,9 +21,16 @@ jobs:
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DCK_PASS }}" | docker login -u "${{ secrets.DCK_USERNAME }}" --password-stdin
 
-    - name: Build core service image
-      run: docker build --target prod -t ${{ env.CORE_IMAGE_NAME }}:${{ env.TAG }} ./backend/core
+    - name: Build images
+      run: |
+        docker build --target prod -t ${{ env.CORE_IMAGE_NAME }}:${{ env.TAG }} ./backend/core
+        docker build --target prod -t ${{ env.BIBOON_IMAGE_NAME }}:${{ env.TAG }} ./backend/biboon
+        docker build -t ${{ env.REDIS_IMAGE_NAME }}:${{ env.TAG }} ./redis
+        docker build --target prod -t ${{ env.NGINX_IMAGE_NAME }}:${{ env.TAG }} ./nginx
 
-    - name: Push core service image
-      run: docker push ${{ env.CORE_IMAGE_NAME }}:${{ env.TAG }}
-
+    - name: Push images
+      run: |
+        docker push ${{ env.CORE_IMAGE_NAME }}:${{ env.TAG }}
+        docker push ${{ env.BIBOON_IMAGE_NAME }}:${{ env.TAG }}
+        docker push ${{ env.NGINX_IMAGE_NAME }}:${{ env.TAG }}
+        docker push ${{ env.REDIS_IMAGE_NAME }}:${{ env.TAG }}
