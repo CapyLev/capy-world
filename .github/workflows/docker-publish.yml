@@ -19,18 +19,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install SSH key
-      run: |
-        echo "${{ secrets.REMOTE_SSH_TOKEN }}" > id_rsa
-        chmod 600 id_rsa
-
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        mv id_rsa ~/.ssh/id_rsa
-
-    - name: SSH Key Scan
-      run: ssh-keyscan -H ${{ secrets.REMOTE_SSH_HOST }} >> ~/.ssh/known_hosts
+    - name: print out example job
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.REMOTE_SSH_HOST }}
+        username: ${{ secrets.REMOTE_SSH_USER }}
+        key: ${{ secrets.REMOTE_SSH_TOKEN }}
+        port: ${{ secrets.REMOTE_SSH_PORT }}
+        command_timeout: 5m
+        script: |
+          echo "Nice Job!!!"
 
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DCK_PASS }}" | docker login -u "${{ secrets.DCK_USERNAME }}" --password-stdin
