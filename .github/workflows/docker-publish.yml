@@ -19,17 +19,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: print out example job
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.REMOTE_SSH_HOST }}
-        username: ${{ secrets.REMOTE_SSH_USER }}
-        key: ${{ secrets.REMOTE_SSH_TOKEN }}
-        port: ${{ secrets.REMOTE_SSH_PORT }}
-        command_timeout: 5m
-        script: |
-          echo "Nice Job!!!"
-
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DCK_PASS }}" | docker login -u "${{ secrets.DCK_USERNAME }}" --password-stdin
 
@@ -53,5 +42,12 @@ jobs:
         docker push ${{ env.REDIS_IMAGE_NAME }}:${{ env.TAG }}
 
     - name: Up it on remote server
-      run: |
-        cat ./docker-compose.prod.yaml | ssh -i ~/.ssh/id_rsa -p ${{ secrets.REMOTE_SSH_PORT }} ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} "sudo docker compose -f - up -d"
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.REMOTE_SSH_HOST }}
+        username: ${{ secrets.REMOTE_SSH_USER }}
+        key: ${{ secrets.REMOTE_SSH_TOKEN }}
+        port: ${{ secrets.REMOTE_SSH_PORT }}
+        command_timeout: 5m
+        script: |
+          cat ./docker-compose.prod.yaml | ssh -i ~/.ssh/id_rsa -p ${{ secrets.REMOTE_SSH_PORT }} ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} "sudo docker compose -f - up -d"
