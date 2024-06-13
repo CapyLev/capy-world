@@ -19,6 +19,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Set up SSH key
+      run: |
+        env
+        mkdir -p ~/.ssh
+        echo "${{ secrets.REMOTE_SSH_TOKEN }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DCK_PASS }}" | docker login -u "${{ secrets.DCK_USERNAME }}" --password-stdin
 
@@ -43,4 +50,4 @@ jobs:
 
     - name: Up it on remote server
       run: |
-        cat ./docker-compose.prod.yaml | ssh ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} -p ${{ secrets.REMOTE_SSH_PORT }} "docker compose -f - up -d"
+        cat ./docker-compose.prod.yaml | ssh -i ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} -p ${{ secrets.REMOTE_SSH_PORT }} "sudo docker compose -f - up -d"
