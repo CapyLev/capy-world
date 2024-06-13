@@ -43,4 +43,4 @@ jobs:
 
     - name: Up it on remote server
       run: |
-        cat ./docker-compose.prod.yaml | ssh ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} -p ${{ REMOTE_SSH_PORT }} "docker compose -f - up -d"
+        cat ./docker-compose.prod.yaml | ssh ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} -p ${{ secrets.REMOTE_SSH_PORT }} "docker compose -f - up -d"
