@@ -19,14 +19,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up SSH
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.REMOTE_SSH_TOKEN }}
+    - name: Install SSH key
       run: |
-        mkdir -p ~/.ssh/
-        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.REMOTE_SSH_HOST }} >> ~/.ssh/known_hosts
+        echo "${{ secrets.REMOTE_SSH_TOKEN }}" > id_rsa
+        chmod 600 id_rsa
+
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        mv id_rsa ~/.ssh/id_rsa
+
+    - name: SSH Key Scan
+      run: ssh-keyscan -H ${{ secrets.REMOTE_SSH_HOST }} >> ~/.ssh/known_hosts
 
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DCK_PASS }}" | docker login -u "${{ secrets.DCK_USERNAME }}" --password-stdin
