@@ -12,6 +12,4 @@ jobs:
 
     steps:
     - name: releases
-      run: |
-            ls
-            make release_all -f Makefile
+      run: ls
