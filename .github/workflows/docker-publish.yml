@@ -40,3 +40,7 @@ jobs:
         docker push ${{ env.BIBOON_IMAGE_NAME }}:${{ env.TAG }}
         docker push ${{ env.NGINX_IMAGE_NAME }}:${{ env.TAG }}
         docker push ${{ env.REDIS_IMAGE_NAME }}:${{ env.TAG }}
+
+    - name: Up it on remote server
+      run: |
+        cat ./docker-compose.prod.yaml | ssh ${{ secrets.REMOTE_SSH_USER }}@${{ secrets.REMOTE_SSH_HOST }} -p ${{ REMOTE_SSH_PORT }} "docker compose -f - up -d"
