@@ -1,0 +1,15 @@
+name: Docker Releases
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: releases
+      run: make releases_all
