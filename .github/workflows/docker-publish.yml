@@ -21,12 +21,17 @@ jobs:
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DCK_PASS }}" | docker login -u "${{ secrets.DCK_USERNAME }}" --password-stdin
 
-    - name: Build images
-      run: |
-        docker build --target prod -t ${{ env.CORE_IMAGE_NAME }}:${{ env.TAG }} ./backend/core
-        docker build --target prod -t ${{ env.BIBOON_IMAGE_NAME }}:${{ env.TAG }} ./backend/biboon
-        docker build -t ${{ env.REDIS_IMAGE_NAME }}:${{ env.TAG }} ./redis
-        docker build --target prod -t ${{ env.NGINX_IMAGE_NAME }}:${{ env.TAG }} ./nginx
+    - name: Build core image
+    - run: docker build --target prod --build-arg CORE_DEBUG=${{ secrets.CORE_DEBUG }} --build-arg CORE_SECRET_KEY=${{ secrets.CORE_SECRET_KEY }} --build-arg CORE_ALLOWED_HOSTS="${{ secrets.CORE_ALLOWED_HOSTS }}" --build-arg CORE_ENGINE="${{ secrets.CORE_ENGINE }}" --build-arg CORE_DB_NAME="${{ secrets.CORE_DB_NAME }}" --build-arg CORE_DB_USER="${{ secrets.CORE_DB_USER }}" --build-arg CORE_DB_PASSWORD="${{ secrets.CORE_DB_PASSWORD }}" --build-arg CORE_DB_HOST="${{ secrets.CORE_DB_HOST }}" --build-arg CORE_DB_PORT="${{ secrets.CORE_DB_PORT }}" -t ${{ env.CORE_IMAGE_NAME }}:${{ env.TAG }} ./backend/core
+
+    - name: Build biboon image
+    - run: docker build --target prod --build-arg BIBOON_DEBUG=${{ secrets.BIBOON_DEBUG }} --build-arg BIBOON_RABBITMQ_USER=${{ secrets.BIBOON_RABBITMQ_USER }} --build-arg BIBOON_RABBITMQ_PASS=${{ secrets.BIBOON_RABBITMQ_PASS }} --build-arg BIBOON_RABBITMQ_HOST=${{ secrets.BIBOON_RABBITMQ_HOST }} --build-arg BIBOON_RABBITMQ_PORT=${{ secrets.BIBOON_RABBITMQ_PORT }} --build-arg BIBOON_RABBITMQ_VHOST=${{ secrets.BIBOON_RABBITMQ_VHOST }} --build-arg BIBOON_MONGO_DB_NAME=${{ secrets.BIBOON_MONGO_DB_NAME }} --build-arg BIBOON_MONGO_COLLECTION=${{ secrets.BIBOON_MONGO_COLLECTION }} --build-arg BIBOON_MONGO_HOST=${{ secrets.BIBOON_MONGO_HOST }} --build-arg BIBOON_MONGO_PORT=${{ secrets.BIBOON_MONGO_PORT }} -t ${{ env.BIBOON_IMAGE_NAME }}:${{ env.TAG }} ./backend/biboon
+
+    - name: Build redis image
+    - run: docker build -t ${{ env.REDIS_IMAGE_NAME }}:${{ env.TAG }} ./redis
+
+    -name: Build nginx image
+    - run: docker build --target prod -t ${{ env.NGINX_IMAGE_NAME }}:${{ env.TAG }} ./nginx
 
     - name: Push images
       run: |
